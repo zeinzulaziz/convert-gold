@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gold Price Calculator - Trader Edition</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --card: #1a1d29;
+    --border: #2a2d3a;
+    --accent: #f0b90b;
+    --accent2: #1a9c54;
+    --red: #e74c3c;
+    --green: #2ecc71;
+    --text: #e1e4ea;
+    --dim: #8a8d98;
+    --input-bg: #252836;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  .header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header h1 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .mode-toggle {
+    display: flex;
+    background: var(--input-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .mode-toggle button {
+    padding: 8px 18px;
+    border: none;
+    background: transparent;
+    color: var(--dim);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all .2s;
+  }
+  .mode-toggle button.active {
+    background: var(--accent);
+    color: #000;
+  }
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  .live-banner {
+    background: linear-gradient(135deg, #1a1d29 0%, #252836 100%);
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+    padding: 18px 24px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .live-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--green), var(--accent));
+    animation: shimmer 3s infinite;
+  }
+  @keyframes shimmer {
+    0%, 100% { opacity: .6; }
+    50% { opacity: 1; }
+  }
+  .live-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .live-gold-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #f0b90b, #d4a00a);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 900;
+    color: #000;
+    flex-shrink: 0;
+  }
+  .live-label {
+    font-size: 11px;
+    color: var(--dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .live-price-usd {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--accent);
+  }
+  .live-change {
+    font-size: 13px;
+    font-weight: 600;
+    margin-left: 8px;
+  }
+  .live-right {
+    text-align: right;
+  }
+  .live-rp {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--green);
+  }
+  .live-sub {
+    font-size: 11px;
+    color: var(--dim);
+    margin-top: 2px;
+  }
+  .live-updated {
+    font-size: 10px;
+    color: var(--dim);
+    margin-top: 2px;
+  }
+
+  .top-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .info-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+  .info-card label {
+    font-size: 11px;
+    color: var(--dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .info-card .value {
+    font-size: 24px;
+    font-weight: 700;
+  }
+  .info-card .sub {
+    font-size: 12px;
+    color: var(--dim);
+    margin-top: 4px;
+  }
+  .up { color: var(--green); }
+  .down { color: var(--red); }
+
+  .main-grid {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 800px) {
+    .main-grid { grid-template-columns: 1fr; }
+    .top-bar { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .panel h3 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--accent);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+  }
+
+  .form-group {
+    margin-bottom: 14px;
+  }
+  .form-group label {
+    display: block;
+    font-size: 12px;
+    color: var(--dim);
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+  .form-group input {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 600;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .form-group input:focus {
+    border-color: var(--accent);
+  }
+  .form-group .hint {
+    font-size: 11px;
+    color: var(--dim);
+    margin-top: 4px;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity .2s;
+    margin-top: 6px;
+  }
+  .btn:hover { opacity: .85; }
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+  }
+  .btn-green {
+    background: var(--green);
+    color: #000;
+  }
+  .btn-red {
+    background: var(--red);
+    color: #fff;
+  }
+
+  .results-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .results-table th {
+    text-align: left;
+    font-size: 11px;
+    color: var(--dim);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .results-table td {
+    padding: 10px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .results-table tr:last-child td { border-bottom: none; }
+  .results-table .gram-col { color: var(--accent); }
+  .results-table .rp-col { color: var(--text); }
+
+  /* Advanced Mode */
+  .advanced-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .input-entry { border-left: 3px solid var(--accent); padding-left: 10px; }
+  .input-target { border-left: 3px solid var(--green); padding-left: 10px; }
+  .input-sl { border-left: 3px solid var(--red); padding-left: 10px; }
+
+  .profit-card {
+    background: var(--input-bg);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+  }
+  .profit-card .label {
+    font-size: 11px;
+    color: var(--dim);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .profit-card .amount {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .rr-box {
+    text-align: center;
+    padding: 20px;
+    background: var(--input-bg);
+    border-radius: 10px;
+    border: 2px solid var(--border);
+    margin-top: 12px;
+  }
+  .rr-box .rr-label {
+    font-size: 12px;
+    color: var(--dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .rr-box .rr-value {
+    font-size: 36px;
+    font-weight: 800;
+  }
+  .rr-good { border-color: var(--green); }
+  .rr-bad { border-color: var(--red); }
+  .rr-neutral { border-color: var(--accent); }
+
+  /* Chart */
+  .chart-container {
+    position: relative;
+    height: 250px;
+    background: var(--input-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin-top: 12px;
+    overflow: hidden;
+  }
+  canvas {
+    width: 100%;
+    height: 100%;
+  }
+
+  .scenario-btns {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .scenario-btns button {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--input-bg);
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .scenario-btns button.active-scenario {
+    border-color: var(--accent);
+    background: rgba(240, 185, 11, .1);
+    color: var(--accent);
+  }
+
+  .target-list {
+    margin-top: 10px;
+  }
+  .target-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    background: var(--input-bg);
+    border-radius: 6px;
+    margin-bottom: 6px;
+    border: 1px solid var(--border);
+  }
+  .target-item .target-price {
+    font-weight: 700;
+    color: var(--green);
+  }
+  .target-item .target-profit {
+    font-size: 13px;
+    color: var(--dim);
+  }
+  .target-item .remove-target {
+    background: none;
+    border: none;
+    color: var(--red);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0 4px;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+    animation: pulse 2s infinite;
+  }
+  .status-live { background: var(--green); }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .4; }
+  }
+
+  .hidden { display: none !important; }
+
+  .quick-targets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .quick-targets button {
+    padding: 5px 10px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--dim);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .quick-targets button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* Antam / UBS Section */
+  .brand-section {
+    margin-bottom: 20px;
+  }
+  .brand-section h3 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--accent);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .brand-section h3 .brand-tag {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .tag-antam { background: #e74c3c22; color: #e74c3c; border: 1px solid #e74c3c44; }
+  .tag-ubs { background: #3498db22; color: #3498db; border: 1px solid #3498db44; }
+  .tag-pegadaian { background: #1a9c5422; color: #1a9c54; border: 1px solid #1a9c5444; }
+
+  .brand-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 600px) {
+    .brand-grid { grid-template-columns: 1fr; }
+  }
+  .brand-card {
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+  }
+  .brand-card .brand-name {
+    font-size: 11px;
+    color: var(--dim);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-bottom: 4px;
+  }
+  .brand-card .brand-price {
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .brand-card .brand-sub {
+    font-size: 11px;
+    color: var(--dim);
+    margin-top: 2px;
+  }
+  .brand-card .brand-gram {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .brand-card .brand-gram:last-child { border-bottom: none; }
+  .brand-card .brand-gram .g-label { color: var(--dim); }
+  .brand-card .brand-gram .g-jual { font-weight: 600; }
+  .brand-card .brand-gram .g-buyback { color: var(--dim); font-size: 12px; }
+
+  .brand-1gram {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 600px) {
+    .brand-1gram { grid-template-columns: 1fr; }
+  }
+  .gram1-card {
+    text-align: center;
+    padding: 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--input-bg);
+  }
+  .gram1-card .g1-brand { font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: .5px; }
+  .gram1-card .g1-price { font-size: 20px; font-weight: 800; margin: 4px 0; }
+  .gram1-card .g1-diff { font-size: 11px; }
+  .g1-antam .g1-price { color: #e74c3c; }
+  .g1-ubs .g1-price { color: #3498db; }
+  .g1-peg .g1-price { color: #1a9c54; }
+
+  .brand-status {
+    font-size: 11px;
+    color: var(--dim);
+    text-align: right;
+    margin-top: 8px;
+  }
+
+  .footer-info {
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: var(--dim);
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>⚡ GOLD CALC</h1>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <span id="rateStatus" style="font-size:12px;color:var(--dim);">
+      <span class="status-dot status-live"></span>Loading rate...
+    </span>
+    <div class="mode-toggle">
+      <button id="modeSimple" class="active" onclick="setMode('simple')">Sederhana</button>
+      <button id="modeAdvanced" onclick="setMode('advanced')">Trader Mode</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <!-- Live Gold Price Banner -->
+  <div class="live-banner">
+    <div class="live-left">
+      <div class="live-gold-icon">Au</div>
+      <div>
+        <div class="live-label">Harga Emas Saat Ini</div>
+        <div>
+          <span class="live-price-usd" id="liveGoldUsd">Loading...</span>
+          <span class="live-change" id="liveGoldChange"></span>
+        </div>
+      </div>
+    </div>
+    <div class="live-right">
+      <div class="live-rp" id="liveGoldRp">-</div>
+      <div class="live-sub">Rupiah per gram</div>
+      <div class="live-updated" id="liveGoldUpdated">-</div>
+    </div>
+  </div>
+
+  <!-- Antam / UBS / Pegadaian Prices -->
+  <div class="brand-section" id="brandSection">
+    <h3>
+      HARGA EMAS INDONESIA
+      <span class="brand-tag tag-antam">ANTAM</span>
+      <span class="brand-tag tag-ubs">UBS</span>
+      <span class="brand-tag tag-pegadaian">PEGADAIAN</span>
+    </h3>
+
+    <!-- 1 Gram Comparison -->
+    <div class="brand-1gram" id="brand1Gram">
+      <div class="gram1-card g1-antam">
+        <div class="g1-brand">Antam 1g</div>
+        <div class="g1-price" id="antam1g">-</div>
+        <div class="g1-diff" id="antam1gDiff"></div>
+      </div>
+      <div class="gram1-card g1-peg">
+        <div class="g1-brand">Pegadaian 1g</div>
+        <div class="g1-price" id="peg1g">-</div>
+        <div class="g1-diff" id="peg1gDiff"></div>
+      </div>
+      <div class="gram1-card g1-ubs">
+        <div class="g1-brand">UBS 1g (est.)</div>
+        <div class="g1-price" id="ubs1g">-</div>
+        <div class="g1-diff" id="ubs1gDiff"></div>
+      </div>
+    </div>
+
+    <!-- Detail Table -->
+    <div class="panel" style="padding:14px;">
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Berat</th>
+            <th style="color:#e74c3c;">Antam</th>
+            <th style="color:#1a9c54;">Pegadaian</th>
+            <th>Buyback</th>
+          </tr>
+        </thead>
+        <tbody id="brandTableBody">
+          <tr><td colspan="4" style="text-align:center;color:var(--dim);padding:20px;">Memuat harga...</td></tr>
+        </tbody>
+      </table>
+      <div class="brand-status" id="brandStatus">-</div>
+    </div>
+  </div>
+
+  <!-- Top Info Bar -->
+  <div class="top-bar">
+    <div class="info-card">
+      <label>Harga Emas (Input)</label>
+      <div class="value" id="displayGoldUsd" style="color:var(--accent)">-</div>
+      <div class="sub">USD / troy oz</div>
+    </div>
+    <div class="info-card">
+      <label>Kurs USD/IDR</label>
+      <div class="value" id="displayRate" style="color:var(--accent2)">-</div>
+      <div class="sub" id="rateSource">Realtime</div>
+    </div>
+    <div class="info-card">
+      <label>Emas per gram (Rp)</label>
+      <div class="value" id="displayPerGram" style="color:var(--accent)">-</div>
+      <div class="sub">1 troy oz = 31.1035 gram</div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <!-- Left Panel: Input -->
+    <div>
+      <!-- Simple Mode Input -->
+      <div id="simplePanel" class="panel">
+        <h3>HARGA EMAS (USD/oz)</h3>
+        <div class="form-group">
+          <label>Masukkan harga emas</label>
+          <input type="number" id="goldPriceInput" placeholder="3350.00" step="0.01" oninput="calculateSimple()">
+          <div class="hint">Contoh: 3350, 3400, 3700, 4300</div>
+        </div>
+        <div class="quick-targets">
+          <button onclick="useLivePrice()" style="border-color:var(--accent);color:var(--accent);">Harga Live</button>
+          <button onclick="setGoldPrice(3300)">3300</button>
+          <button onclick="setGoldPrice(3400)">3400</button>
+          <button onclick="setGoldPrice(3500)">3500</button>
+          <button onclick="setGoldPrice(3700)">3700</button>
+          <button onclick="setGoldPrice(4000)">4000</button>
+          <button onclick="setGoldPrice(4300)">4300</button>
+          <button onclick="setGoldPrice(4700)">4700</button>
+          <button onclick="setGoldPrice(5000)">5000</button>
+        </div>
+
+        <div class="form-group" style="margin-top:16px;">
+          <label>Kurs USD/IDR (otomatis atau manual)</label>
+          <input type="number" id="rateInput" placeholder="Otomatis..." step="1" oninput="calculateSimple()">
+          <div class="hint">Kosongkan untuk kurs otomatis</div>
+        </div>
+      </div>
+
+      <!-- Advanced Mode Input -->
+      <div id="advancedPanel" class="panel hidden">
+        <h3>STRATEGY PRESET</h3>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;">
+          <button class="btn btn-primary" style="width:auto;padding:8px 14px;margin:0;font-size:12px;" onclick="loadRyker()">Ryker Gold Plan</button>
+          <button class="btn" style="width:auto;padding:8px 14px;margin:0;font-size:12px;background:var(--input-bg);color:var(--dim);border:1px solid var(--border);" onclick="clearAdvanced()">Reset</button>
+        </div>
+
+        <h3>TRADING INPUT</h3>
+        <div class="form-group input-entry">
+          <label style="color:var(--accent);">Entry Price (USD/oz)</label>
+          <input type="number" id="entryPrice" placeholder="3690.00" step="0.01" oninput="onEntryChange()">
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="form-group input-target">
+            <label style="color:var(--green);">Target (%)</label>
+            <input type="number" id="targetPct" placeholder="20" step="0.1" value="20" oninput="onPctChange()">
+            <div class="hint" id="targetUsdHint">= $4428.00</div>
+          </div>
+          <div class="form-group input-sl">
+            <label style="color:var(--red);">Stop Loss (%)</label>
+            <input type="number" id="slPct" placeholder="7" step="0.1" value="7" oninput="onPctChange()">
+            <div class="hint" id="slUsdHint">= $3431.70</div>
+          </div>
+        </div>
+
+        <div class="form-group input-target">
+          <label style="color:var(--green);">Target Price (USD/oz) - otomatis atau manual</label>
+          <div style="display:flex;gap:6px;">
+            <input type="number" id="targetPrice" placeholder="4428.00" step="0.01" style="flex:1;">
+            <button class="btn btn-green" style="width:auto;padding:10px 14px;margin:0;" onclick="addTarget()">+ Add</button>
+          </div>
+        </div>
+        <div class="target-list" id="targetList"></div>
+
+        <div class="form-group input-sl">
+          <label style="color:var(--red);">Stop Loss (USD/oz) - otomatis atau manual</label>
+          <input type="number" id="slPrice" placeholder="3431.70" step="0.01" oninput="calculateAdvanced()">
+        </div>
+
+        <div class="form-group">
+          <label>Kurs USD/IDR</label>
+          <input type="number" id="rateInputAdv" placeholder="Otomatis..." step="1" oninput="calculateAdvanced()">
+          <div class="hint">Kosongkan untuk kurs otomatis</div>
+        </div>
+
+        <div class="form-group">
+          <label>Modal (gram)</label>
+          <input type="number" id="modalGram" placeholder="100" value="100" step="1" oninput="calculateAdvanced()">
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel: Results -->
+    <div>
+      <!-- Simple Results -->
+      <div id="simpleResults" class="panel">
+        <h3>HARGA PER GRAM DALAM RUPIAH</h3>
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>Berat</th>
+              <th>Harga (Rp)</th>
+              <th>Harga (Rp, bulat)</th>
+            </tr>
+          </thead>
+          <tbody id="simpleTableBody">
+            <tr><td colspan="3" style="text-align:center;color:var(--dim);padding:30px;">Masukkan harga emas untuk mulai</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Advanced Results -->
+      <div id="advancedResults" class="panel hidden">
+        <h3>ANALISA TRADING</h3>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+          <div class="profit-card">
+            <div class="label">Profit per gram</div>
+            <div class="amount up" id="profitPerGram">-</div>
+          </div>
+          <div class="profit-card">
+            <div class="label">Loss per gram (SL)</div>
+            <div class="amount down" id="lossPerGram">-</div>
+          </div>
+        </div>
+
+        <h3 style="margin-top:16px;">POTENSI PROFIT</h3>
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>Berat</th>
+              <th>Profit (Rp)</th>
+              <th>Loss (Rp)</th>
+            </tr>
+          </thead>
+          <tbody id="advTableBody">
+            <tr><td colspan="3" style="text-align:center;color:var(--dim);padding:20px;">Masukkan data trading</td></tr>
+          </tbody>
+        </table>
+
+        <div class="rr-box" id="rrBox">
+          <div class="rr-label">Risk / Reward Ratio</div>
+          <div class="rr-value" id="rrValue">-</div>
+          <div class="sub" id="rrDesc" style="margin-top:4px;"></div>
+        </div>
+
+        <h3 style="margin-top:20px;">SCENARIO CHART</h3>
+        <div class="scenario-btns">
+          <button class="active-scenario" id="btnBull" onclick="setScenario('bull')">Bullish</button>
+          <button id="btnBear" onclick="setScenario('bear')">Bearish</button>
+          <button id="btnBoth" onclick="setScenario('both')">Both</button>
+        </div>
+        <div class="chart-container">
+          <canvas id="scenarioChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-info">
+    Data kurs dari Frankfurter API (ECB rates) | 1 troy oz = 31.1035 gram | Harga emas manual input
+  </div>
+</div>
+
+<script>
+const OZ_TO_GRAM = 31.1035;
+let usdIdrRate = 16250;
+let liveGoldPrice = null;
+let prevGoldPrice = null;
+let targets = [];
+let currentMode = 'simple';
+let currentScenario = 'bull';
+
+// Fetch real-time USD/IDR rate
+async function fetchRate() {
+  try {
+    const res = await fetch('https://api.frankfurter.dev/v1/latest?base=USD&symbols=IDR');
+    const data = await res.json();
+    usdIdrRate = data.rates.IDR;
+    document.getElementById('displayRate').textContent = formatRp(usdIdrRate);
+    document.getElementById('rateSource').textContent = 'Frankfurter (ECB) - Live';
+    document.getElementById('rateStatus').innerHTML = '<span class="status-dot status-live"></span>Kurs Live';
+    calculateSimple();
+    calculateAdvanced();
+    // Update live gold Rp if price already loaded
+    if (liveGoldPrice) {
+      const rpPerGram = (liveGoldPrice / OZ_TO_GRAM) * usdIdrRate;
+      document.getElementById('liveGoldRp').textContent = formatRpFull(rpPerGram);
+    }
+  } catch (e) {
+    document.getElementById('rateStatus').innerHTML = '<span class="status-dot" style="background:var(--red);"></span>Gagal load kurs';
+    document.getElementById('rateSource').textContent = 'Error - gunakan input manual';
+  }
+}
+
+function formatRp(n) {
+  return 'Rp ' + n.toLocaleString('id-ID', { maximumFractionDigits: 0 });
+}
+
+function formatRpFull(n) {
+  return 'Rp ' + Math.round(n).toLocaleString('id-ID');
+}
+
+function getRate() {
+  const manual = parseFloat(document.getElementById(currentMode === 'advanced' ? 'rateInputAdv' : 'rateInput').value);
+  return (!isNaN(manual) && manual > 0) ? manual : usdIdrRate;
+}
+
+function usdToRpPerGram(usdPrice) {
+  const rate = getRate();
+  if (!rate) return null;
+  return (usdPrice / OZ_TO_GRAM) * rate;
+}
+
+// Simple Mode
+function useLivePrice() {
+  if (liveGoldPrice) {
+    document.getElementById('goldPriceInput').value = liveGoldPrice;
+    calculateSimple();
+  }
+}
+
+function setGoldPrice(p) {
+  document.getElementById('goldPriceInput').value = p;
+  calculateSimple();
+}
+
+function calculateSimple() {
+  const usd = parseFloat(document.getElementById('goldPriceInput').value);
+  if (!usd || !getRate()) {
+    document.getElementById('displayGoldUsd').textContent = '-';
+    document.getElementById('displayPerGram').textContent = '-';
+    document.getElementById('simpleTableBody').innerHTML =
+      '<tr><td colspan="3" style="text-align:center;color:var(--dim);padding:30px;">Masukkan harga emas untuk mulai</td></tr>';
+    return;
+  }
+
+  document.getElementById('displayGoldUsd').textContent = '$' + usd.toLocaleString('en-US', { minimumFractionDigits: 2 });
+  const perGram = usdToRpPerGram(usd);
+  document.getElementById('displayPerGram').textContent = formatRpFull(perGram);
+
+  const weights = [1, 5, 10, 25, 50, 100];
+  let html = '';
+  weights.forEach(w => {
+    const price = perGram * w;
+    html += `<tr>
+      <td class="gram-col">${w} gram</td>
+      <td class="rp-col">${formatRpFull(price)}</td>
+      <td class="rp-col">${formatRp(price)}</td>
+    </tr>`;
+  });
+  document.getElementById('simpleTableBody').innerHTML = html;
+}
+
+// Percentage-based inputs
+function onEntryChange() {
+  onPctChange();
+  calculateAdvanced();
+}
+
+function onPctChange() {
+  const entry = parseFloat(document.getElementById('entryPrice').value);
+  const targetPct = parseFloat(document.getElementById('targetPct').value);
+  const slPct = parseFloat(document.getElementById('slPct').value);
+
+  if (entry && targetPct) {
+    const targetUsd = entry * (1 + targetPct / 100);
+    document.getElementById('targetUsdHint').textContent = '= $' + targetUsd.toFixed(2);
+    document.getElementById('targetPrice').value = targetUsd.toFixed(2);
+  }
+  if (entry && slPct) {
+    const slUsd = entry * (1 - slPct / 100);
+    document.getElementById('slUsdHint').textContent = '= $' + slUsd.toFixed(2);
+    document.getElementById('slPrice').value = slUsd.toFixed(2);
+  }
+  calculateAdvanced();
+}
+
+function loadRyker() {
+  document.getElementById('entryPrice').value = 3690;
+  document.getElementById('targetPct').value = 20;
+  document.getElementById('slPct').value = 7;
+  targets = [];
+  onPctChange();
+  // Auto-add target
+  const targetUsd = 3690 * 1.20;
+  targets = [targetUsd];
+  renderTargets();
+  calculateAdvanced();
+}
+
+function clearAdvanced() {
+  document.getElementById('entryPrice').value = '';
+  document.getElementById('targetPct').value = '';
+  document.getElementById('slPct').value = '';
+  document.getElementById('targetPrice').value = '';
+  document.getElementById('slPrice').value = '';
+  document.getElementById('targetUsdHint').textContent = '';
+  document.getElementById('slUsdHint').textContent = '';
+  document.getElementById('modalGram').value = 100;
+  targets = [];
+  renderTargets();
+  calculateAdvanced();
+}
+
+// Advanced Mode
+function addTarget() {
+  const val = parseFloat(document.getElementById('targetPrice').value);
+  if (!val || targets.includes(val)) return;
+  targets.push(val);
+  targets.sort((a, b) => a - b);
+  renderTargets();
+  calculateAdvanced();
+  document.getElementById('targetPrice').value = '';
+}
+
+function removeTarget(i) {
+  targets.splice(i, 1);
+  renderTargets();
+  calculateAdvanced();
+}
+
+function renderTargets() {
+  const el = document.getElementById('targetList');
+  if (targets.length === 0) { el.innerHTML = ''; return; }
+  el.innerHTML = targets.map((t, i) =>
+    `<div class="target-item">
+      <span>Target ${i + 1}: <span class="target-price">$${t.toLocaleString()}</span></span>
+      <button class="remove-target" onclick="removeTarget(${i})">✕</button>
+    </div>`
+  ).join('');
+}
+
+function calculateAdvanced() {
+  const entry = parseFloat(document.getElementById('entryPrice').value);
+  const sl = parseFloat(document.getElementById('slPrice').value);
+  const rate = getRate();
+  const modalGram = parseFloat(document.getElementById('modalGram').value) || 100;
+
+  if (!entry || !rate) {
+    document.getElementById('profitPerGram').textContent = '-';
+    document.getElementById('lossPerGram').textContent = '-';
+    document.getElementById('advTableBody').innerHTML =
+      '<tr><td colspan="3" style="text-align:center;color:var(--dim);padding:20px;">Masukkan data trading</td></tr>';
+    document.getElementById('rrValue').textContent = '-';
+    return;
+  }
+
+  const entryRp = usdToRpPerGram(entry);
+  document.getElementById('displayGoldUsd').textContent = '$' + entry.toLocaleString('en-US', { minimumFractionDigits: 2 });
+  document.getElementById('displayPerGram').textContent = formatRpFull(entryRp);
+
+  let profitPerGramUsd = 0;
+  let lossPerGramUsd = 0;
+
+  if (targets.length > 0) {
+    const bestTarget = targets[targets.length - 1];
+    profitPerGramUsd = bestTarget - entry;
+  }
+  if (sl) {
+    lossPerGramUsd = entry - sl;
+  }
+
+  const profitPerGramRp = profitPerGramUsd * (rate / OZ_TO_GRAM);
+  const lossPerGramRp = lossPerGramUsd * (rate / OZ_TO_GRAM);
+
+  document.getElementById('profitPerGram').textContent = profitPerGramUsd > 0 ? '+' + formatRpFull(profitPerGramRp) : '-';
+  document.getElementById('lossPerGram').textContent = lossPerGramUsd > 0 ? '-' + formatRpFull(lossPerGramRp) : '-';
+
+  // Table
+  let html = '';
+  const weights = [1, 5, 10, 25, 50, 100];
+  weights.forEach(w => {
+    const profit = profitPerGramRp * w;
+    const loss = lossPerGramRp * w;
+    html += `<tr>
+      <td class="gram-col">${w} gram</td>
+      <td style="color:var(--green);">${profit > 0 ? '+' + formatRpFull(profit) : '-'}</td>
+      <td style="color:var(--red);">${loss > 0 ? '-' + formatRpFull(loss) : '-'}</td>
+    </tr>`;
+  });
+  // Modal row
+  const totalProfit = profitPerGramRp * modalGram;
+  const totalLoss = lossPerGramRp * modalGram;
+  html += `<tr style="border-top:2px solid var(--accent);">
+    <td class="gram-col" style="font-size:15px;">${modalGram} gram (modal)</td>
+    <td style="color:var(--green);font-size:15px;">${totalProfit > 0 ? '+' + formatRpFull(totalProfit) : '-'}</td>
+    <td style="color:var(--red);font-size:15px;">${totalLoss > 0 ? '-' + formatRpFull(totalLoss) : '-'}</td>
+  </tr>`;
+  document.getElementById('advTableBody').innerHTML = html;
+
+  // R/R
+  const rrBox = document.getElementById('rrBox');
+  if (profitPerGramUsd > 0 && lossPerGramUsd > 0) {
+    const rr = profitPerGramUsd / lossPerGramUsd;
+    document.getElementById('rrValue').textContent = '1 : ' + rr.toFixed(2);
+    rrBox.className = 'rr-box ' + (rr >= 2 ? 'rr-good' : rr >= 1 ? 'rr-neutral' : 'rr-bad');
+    let desc = '';
+    if (rr >= 3) desc = 'Sangat bagus! High probability setup';
+    else if (rr >= 2) desc = 'Bagus, risk terkontrol';
+    else if (rr >= 1) desc = 'Break even, pertimbangkan lagi';
+    else desc = 'Risk terlalu besar, tidak disarankan';
+    document.getElementById('rrDesc').textContent = desc;
+  } else {
+    document.getElementById('rrValue').textContent = '-';
+    rrBox.className = 'rr-box';
+    document.getElementById('rrDesc').textContent = 'Masukkan Target dan Stop Loss';
+  }
+
+  drawChart(entry, sl, targets, modalGram);
+}
+
+// Mode Toggle
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('modeSimple').className = mode === 'simple' ? 'active' : '';
+  document.getElementById('modeAdvanced').className = mode === 'advanced' ? 'active' : '';
+  document.getElementById('simplePanel').className = mode === 'simple' ? 'panel' : 'panel hidden';
+  document.getElementById('advancedPanel').className = mode === 'advanced' ? 'panel' : 'panel hidden';
+  document.getElementById('simpleResults').className = mode === 'simple' ? 'panel' : 'panel hidden';
+  document.getElementById('advancedResults').className = mode === 'advanced' ? 'panel' : 'panel hidden';
+  if (mode === 'advanced') calculateAdvanced();
+  else calculateSimple();
+}
+
+// Scenario
+function setScenario(s) {
+  currentScenario = s;
+  document.getElementById('btnBull').className = s === 'bull' ? 'active-scenario' : '';
+  document.getElementById('btnBear').className = s === 'bear' ? 'active-scenario' : '';
+  document.getElementById('btnBoth').className = s === 'both' ? 'active-scenario' : '';
+  const entry = parseFloat(document.getElementById('entryPrice').value);
+  const sl = parseFloat(document.getElementById('slPrice').value);
+  if (entry) drawChart(entry, sl, targets, parseFloat(document.getElementById('modalGram').value) || 100);
+}
+
+// Chart Drawing
+function drawChart(entry, sl, tgts, modal) {
+  const canvas = document.getElementById('scenarioChart');
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  ctx.scale(dpr, dpr);
+
+  const W = rect.width;
+  const H = rect.height;
+  const pad = { top: 20, right: 60, bottom: 30, left: 20 };
+  const cW = W - pad.left - pad.right;
+  const cH = H - pad.top - pad.bottom;
+
+  ctx.clearRect(0, 0, W, H);
+
+  if (!entry) return;
+
+  const rate = getRate();
+  if (!rate) return;
+
+  let prices = [entry];
+  if (sl) prices.push(sl);
+  tgts.forEach(t => prices.push(t));
+
+  let minP = Math.min(...prices);
+  let maxP = Math.max(...prices);
+  const range = maxP - minP || 100;
+  minP -= range * 0.15;
+  maxP += range * 0.15;
+
+  const priceToY = (p) => pad.top + cH - ((p - minP) / (maxP - minP)) * cH;
+  const idxToX = (i, total) => pad.left + (i / (total - 1)) * cW;
+
+  // Grid
+  ctx.strokeStyle = '#2a2d3a';
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i <= 5; i++) {
+    const y = pad.top + (cH / 5) * i;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, y);
+    ctx.lineTo(W - pad.right, y);
+    ctx.stroke();
+    const pVal = maxP - ((maxP - minP) / 5) * i;
+    ctx.fillStyle = '#8a8d98';
+    ctx.font = '10px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('$' + Math.round(pVal), W - pad.right + 4, y + 4);
+  }
+
+  const drawLine = (pts, color, dash) => {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.5;
+    ctx.setLineDash(dash || []);
+    ctx.beginPath();
+    pts.forEach((p, i) => {
+      const x = idxToX(i, pts.length);
+      const y = priceToY(p);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Dots
+    pts.forEach((p, i) => {
+      const x = idxToX(i, pts.length);
+      const y = priceToY(p);
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(x, y, 4, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  };
+
+  const profitPts = (startP, endP, steps) => {
+    const arr = [];
+    for (let i = 0; i <= steps; i++) {
+      arr.push(startP + (endP - startP) * (i / steps) + (Math.random() - 0.5) * (range * 0.02));
+    }
+    arr[arr.length - 1] = endP;
+    return arr;
+  };
+
+  const steps = 40;
+
+  if (currentScenario === 'bull' || currentScenario === 'both') {
+    tgts.forEach((t, i) => {
+      const pts = profitPts(entry, t, steps);
+      drawLine(pts, 'rgba(46,204,113,0.7)', []);
+      // Label
+      ctx.fillStyle = '#2ecc71';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.fillText('Target ' + (i + 1) + ': $' + t, idxToX(steps, steps) + 6, priceToY(t) + 4);
+    });
+  }
+
+  if ((currentScenario === 'bear' || currentScenario === 'both') && sl) {
+    const pts = profitPts(entry, sl, steps);
+    drawLine(pts, 'rgba(231,76,60,0.7)', [6, 4]);
+    ctx.fillStyle = '#e74c3c';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.fillText('SL: $' + sl, idxToX(steps, steps) + 6, priceToY(sl) + 4);
+  }
+
+  // Entry line
+  ctx.strokeStyle = '#f0b90b';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(pad.left, priceToY(entry));
+  ctx.lineTo(W - pad.right, priceToY(entry));
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#f0b90b';
+  ctx.font = 'bold 11px sans-serif';
+  ctx.fillText('Entry: $' + entry, pad.left + 4, priceToY(entry) - 6);
+
+  // Profit/Loss annotation
+  if (tgts.length > 0 && sl) {
+    const best = tgts[tgts.length - 1];
+    const profitRp = (best - entry) * (rate / OZ_TO_GRAM) * modal;
+    const lossRp = (entry - sl) * (rate / OZ_TO_GRAM) * modal;
+
+    ctx.font = 'bold 12px sans-serif';
+    if (currentScenario !== 'bear') {
+      ctx.fillStyle = '#2ecc71';
+      ctx.fillText('Profit: +' + formatRpFull(profitRp), pad.left + 4, H - 8);
+    }
+    if (currentScenario !== 'bull') {
+      ctx.fillStyle = '#e74c3c';
+      ctx.fillText('Loss: -' + formatRpFull(lossRp), currentScenario === 'both' ? pad.left + 160 : pad.left + 4, H - 8);
+    }
+  }
+}
+
+// Fetch live gold price
+async function fetchGoldPrice() {
+  try {
+    const res = await fetch('https://mintedmetal.com/api/prices.json');
+    const data = await res.json();
+    prevGoldPrice = liveGoldPrice;
+    liveGoldPrice = data.metals.gold.price;
+    const prevPrice = data.metals.gold.previousPrice;
+    const change = liveGoldPrice - prevPrice;
+    const changePct = ((change / prevPrice) * 100).toFixed(2);
+    const isUp = change >= 0;
+
+    document.getElementById('liveGoldUsd').textContent = '$' + liveGoldPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    const changeEl = document.getElementById('liveGoldChange');
+    changeEl.textContent = (isUp ? '+' : '') + change.toFixed(2) + ' (' + (isUp ? '+' : '') + changePct + '%)';
+    changeEl.style.color = isUp ? 'var(--green)' : 'var(--red)';
+
+    // Convert to Rupiah per gram
+    if (usdIdrRate) {
+      const rpPerGram = (liveGoldPrice / OZ_TO_GRAM) * usdIdrRate;
+      document.getElementById('liveGoldRp').textContent = formatRpFull(rpPerGram);
+    }
+
+    const updatedAt = new Date(data.updatedAt);
+    document.getElementById('liveGoldUpdated').textContent = 'Updated: ' + updatedAt.toLocaleString('id-ID');
+
+    // Auto-fill simple input if empty
+    const simpleInput = document.getElementById('goldPriceInput');
+    if (!simpleInput.value) {
+      simpleInput.value = liveGoldPrice;
+      calculateSimple();
+    }
+  } catch (e) {
+    document.getElementById('liveGoldUsd').textContent = 'Gagal load';
+    document.getElementById('liveGoldUpdated').textContent = 'Error fetching data';
+  }
+}
+
+// Fetch Antam / UBS / Pegadaian prices
+async function fetchBrandPrices() {
+  const el = document.getElementById('brandTableBody');
+  const statusEl = document.getElementById('brandStatus');
+
+  // Detect environment: Netlify Functions only work on Netlify or via netlify dev
+  const isNetlify = window.location.hostname.includes('netlify') || window.location.hostname === 'localhost';
+  const fnUrl = '/.netlify/functions/gold-prices';
+
+  try {
+    const res = await fetch(fnUrl);
+    if (!res.ok) throw new Error('Function not found (status ' + res.status + ')');
+    const data = await res.json();
+    if (data.error || !data.prices || data.prices.length === 0) {
+      throw new Error(data.error || 'No data');
+    }
+    renderBrandPrices(data);
+  } catch (e) {
+    // Fallback: try hargaemas.com directly (will work on Netlify due to server-side function)
+    // If running locally without netlify dev, show instructions
+    statusEl.textContent = 'Info: Untuk harga Antam/UBS, deploy ke Netlify atau jalankan "netlify dev"';
+    el.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--dim);padding:20px;">
+      <div style="margin-bottom:8px;">Harga Antam/UBS membutuhkan Netlify Functions.</div>
+      <div style="font-size:12px;">Deploy ke Netlify atau jalankan: <code style="background:var(--card);padding:2px 6px;border-radius:3px;">netlify dev</code></div>
+    </td></tr>`;
+  }
+}
+
+function renderBrandPrices(data) {
+  const el = document.getElementById('brandTableBody');
+  const statusEl = document.getElementById('brandStatus');
+  const prices = data.prices;
+
+  // 1 Gram comparison
+  const antam1g = prices.find(p => p.gram === '1');
+  if (antam1g) {
+    document.getElementById('antam1g').textContent = formatRp(antam1g.antam);
+    document.getElementById('peg1g').textContent = formatRp(antam1g.pegadaian);
+    // UBS ~1.8% higher than Antam (based on real market data)
+    const ubsEst = Math.round(antam1g.antam * 1.018 / 1000) * 1000;
+    document.getElementById('ubs1g').textContent = formatRp(ubsEst);
+
+    if (liveGoldPrice && usdIdrRate) {
+      const spotRp = (liveGoldPrice / OZ_TO_GRAM) * usdIdrRate;
+      const fmt = (v) => (v >= 0 ? '+' : '') + formatRpFull(v);
+      document.getElementById('antam1gDiff').textContent = fmt(antam1g.antam - spotRp) + ' vs spot';
+      document.getElementById('peg1gDiff').textContent = fmt(antam1g.pegadaian - spotRp) + ' vs spot';
+      document.getElementById('ubs1gDiff').textContent = fmt(ubsEst - spotRp) + ' vs spot';
+    }
+  }
+
+  // Full table
+  let html = '';
+  prices.forEach(p => {
+    html += `<tr>
+      <td class="gram-col">${p.gram}g</td>
+      <td style="color:#e74c3c;font-weight:600;">${formatRp(p.antam)}</td>
+      <td style="color:#1a9c54;font-weight:600;">${p.pegadaian ? formatRp(p.pegadaian) : '-'}</td>
+      <td style="color:var(--dim);">${p.buyback ? formatRp(p.buyback) : '-'}</td>
+    </tr>`;
+  });
+  el.innerHTML = html;
+  statusEl.textContent = 'Sumber: ' + (data.source || 'hargaemas.com') + ' | ' + (data.updatedAt || '-');
+}
+
+// Init
+fetchRate();
+fetchGoldPrice();
+fetchBrandPrices();
+setInterval(fetchRate, 300000);
+setInterval(fetchGoldPrice, 900000);
+setInterval(fetchBrandPrices, 900000);
+
+// Handle Enter key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    if (currentMode === 'simple') calculateSimple();
+    else calculateAdvanced();
+  }
+});
+</script>
+</body>
+</html>
