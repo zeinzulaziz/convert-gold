@@ -15,15 +15,15 @@ function fetchHTTPS(url) {
 
 function parseTable(html) {
   const prices = [];
-  // Match: <tr class="col-antam"><td>0,5</td><td>1.404.500 ...</td><td>1.462.000</td></tr>
-  const regex = /<tr class="col-antam"><td>([^<]+)<\/td>\s*<td[^>]*>([\s\S]*?)<\/td>\s*<td[^>]*>([\s\S]*?)<\/td><\/tr>/g;
+  // Match rows with optional <strong> tags inside <td>
+  const regex = /<tr class="col-antam"><td>([\s\S]*?)<\/td>\s*<td[^>]*>([\s\S]*?)<\/td>\s*<td[^>]*>([\s\S]*?)<\/td><\/tr>/g;
   let m;
   while ((m = regex.exec(html)) !== null) {
-    const gram = m[1].trim();
-    // Extract only the price number (strip HTML tags like <a>, <strong>)
+    // Strip all HTML tags, then extract numbers
+    const gram = m[1].replace(/<[^>]*>/g, '').trim();
     const antamStr = m[2].replace(/<[^>]*>/g, '').replace(/[^0-9.]/g, '').trim();
     const pegStr = m[3].replace(/<[^>]*>/g, '').replace(/[^0-9.]/g, '').trim();
-    if (antamStr) {
+    if (antamStr && gram) {
       prices.push({
         gram,
         antam: parseInt(antamStr.replace(/\./g, '')) || 0,
