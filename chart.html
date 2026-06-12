@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gold Chart - Harga Emas Indonesia</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1117;
+    --card: #1a1d29;
+    --border: #2a2d3a;
+    --accent: #f0b90b;
+    --green: #2ecc71;
+    --red: #e74c3c;
+    --text: #e1e4ea;
+    --dim: #8a8d98;
+    --input-bg: #252836;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  .header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header h1 { font-size: 18px; font-weight: 700; color: var(--accent); }
+  .header a { color: var(--dim); text-decoration: none; font-size: 13px; }
+  .header a:hover { color: var(--accent); }
+
+  .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+
+  .price-banner {
+    background: linear-gradient(135deg, #1a1d29, #252836);
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .price-banner .label { font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; }
+  .price-banner .price { font-size: 32px; font-weight: 800; color: var(--accent); margin: 6px 0; }
+  .price-banner .sub { font-size: 13px; color: var(--dim); }
+  .price-banner .rp { font-size: 18px; font-weight: 700; color: var(--green); margin-top: 4px; }
+
+  .range-btns {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .range-btns button {
+    flex: 1;
+    min-width: 60px;
+    padding: 10px 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--input-bg);
+    color: var(--dim);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .range-btns button.active {
+    border-color: var(--accent);
+    background: rgba(240,185,11,.12);
+    color: var(--accent);
+  }
+  .range-btns button:hover { border-color: var(--accent); }
+
+  .chart-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .chart-box canvas { width: 100% !important; height: 350px !important; }
+  .chart-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    color: var(--dim);
+    font-size: 14px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 600px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .chart-box canvas { height: 250px !important; }
+    .price-banner .price { font-size: 24px; }
+  }
+  .stat-card {
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+  }
+  .stat-card .stat-label { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: .5px; }
+  .stat-card .stat-value { font-size: 16px; font-weight: 700; margin-top: 4px; }
+
+  .brand-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 600px) { .brand-row { grid-template-columns: 1fr; } }
+  .brand-mini {
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+  }
+  .brand-mini .bm-label { font-size: 10px; color: var(--dim); text-transform: uppercase; }
+  .brand-mini .bm-price { font-size: 16px; font-weight: 700; margin: 4px 0; }
+  .brand-mini .bm-sub { font-size: 10px; color: var(--dim); }
+  .bm-antam .bm-price { color: #e74c3c; }
+  .bm-peg .bm-price { color: #1a9c54; }
+  .bm-ubs .bm-price { color: #3498db; }
+
+  .footer { text-align: center; padding: 20px; font-size: 11px; color: var(--dim); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>GOLD CHART</h1>
+  <a href="index.html">← Kembali ke Kalkulator</a>
+</div>
+
+<div class="container">
+  <!-- Current Price -->
+  <div class="price-banner">
+    <div class="label">Harga Emas Saat Ini</div>
+    <div class="price" id="livePrice">Loading...</div>
+    <div class="sub" id="liveChange">-</div>
+    <div class="rp" id="liveRp">-</div>
+  </div>
+
+  <!-- Brand 1g -->
+  <div class="brand-row" id="brandRow">
+    <div class="brand-mini bm-antam">
+      <div class="bm-label">Antam 1g</div>
+      <div class="bm-price" id="bAntam">-</div>
+    </div>
+    <div class="brand-mini bm-peg">
+      <div class="bm-label">Pegadaian 1g</div>
+      <div class="bm-price" id="bPeg">-</div>
+    </div>
+    <div class="brand-mini bm-ubs">
+      <div class="bm-label">UBS 1g</div>
+      <div class="bm-price" id="bUbs">-</div>
+    </div>
+  </div>
+
+  <!-- Range Buttons -->
+  <div class="range-btns">
+    <button onclick="setRange('1W')" id="btn1W">1 Minggu</button>
+    <button onclick="setRange('1M')" id="btn1M" class="active">1 Bulan</button>
+    <button onclick="setRange('1Y')" id="btn1Y">1 Tahun</button>
+    <button onclick="setRange('5Y')" id="btn5Y">5 Tahun</button>
+    <button onclick="setRange('ALL')" id="btnALL">Semua</button>
+  </div>
+
+  <!-- Chart -->
+  <div class="chart-box">
+    <div class="chart-loading" id="chartLoading">Memuat data...</div>
+    <canvas id="goldChart"></canvas>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Tertinggi</div>
+      <div class="stat-value up" id="statHigh">-</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Terendah</div>
+      <div class="stat-value down" id="statLow">-</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Rata-rata</div>
+      <div class="stat-value" id="statAvg" style="color:var(--accent)">-</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Selisih</div>
+      <div class="stat-value" id="statDiff">-</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Data dari freegoldapi.com (LBMA/Yahoo Finance/World Bank) | Kurs dari Frankfurter (ECB) | Antam dari hargaemas.com<br>
+  Attribution: Minted Metal (mintedmetal.com)
+</div>
+
+<script>
+const OZ_TO_GRAM = 31.1035;
+let allData = [];
+let usdIdrRate = 16250;
+let chart = null;
+let currentRange = '1M';
+let liveGoldPrice = 0;
+
+const fmtRp = (n) => 'Rp ' + Math.round(n).toLocaleString('id-ID');
+const fmtUsd = (n) => '$' + n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+
+// Fetch USD/IDR
+async function fetchRate() {
+  try {
+    const r = await fetch('https://api.frankfurter.dev/v1/latest?base=USD&symbols=IDR');
+    const d = await r.json();
+    usdIdrRate = d.rates.IDR;
+  } catch(e) {}
+}
+
+// Fetch historical gold data
+async function fetchGoldHistory() {
+  try {
+    const r = await fetch('https://freegoldapi.com/data/latest.json');
+    allData = await r.json();
+    // Filter only USD data from 2000+
+    allData = allData.filter(d => d.date >= '2000-01-01' && d.source.includes('yahoo') || d.source.includes('worldbank'));
+    allData.sort((a,b) => a.date.localeCompare(b.date));
+  } catch(e) {
+    document.getElementById('chartLoading').textContent = 'Gagal memuat data';
+  }
+}
+
+// Fetch current price
+async function fetchCurrent() {
+  try {
+    const r = await fetch('https://mintedmetal.com/api/prices.json');
+    const d = await r.json();
+    liveGoldPrice = d.metals.gold.price;
+    const prev = d.metals.gold.previousPrice;
+    const change = liveGoldPrice - prev;
+    const pct = ((change/prev)*100).toFixed(2);
+    const isUp = change >= 0;
+
+    document.getElementById('livePrice').textContent = fmtUsd(liveGoldPrice);
+    document.getElementById('liveChange').textContent = (isUp?'+':'') + change.toFixed(2) + ' (' + (isUp?'+':'') + pct + '%)';
+    document.getElementById('liveChange').style.color = isUp ? 'var(--green)' : 'var(--red)';
+    document.getElementById('liveRp').textContent = fmtRp((liveGoldPrice / OZ_TO_GRAM) * usdIdrRate) + ' /gram';
+
+    // Add live point to data
+    const today = new Date().toISOString().split('T')[0];
+    allData.push({ date: today, price: liveGoldPrice, source: 'live' });
+  } catch(e) {
+    document.getElementById('livePrice').textContent = 'Gagal load';
+  }
+}
+
+// Fetch brand prices
+async function fetchBrands() {
+  try {
+    const r = await fetch('/.netlify/functions/gold-prices');
+    const d = await r.json();
+    if (d.prices) {
+      const g1 = d.prices.find(p => p.gram === '1');
+      if (g1) {
+        document.getElementById('bAntam').textContent = fmtRp(g1.antam);
+        document.getElementById('bPeg').textContent = fmtRp(g1.pegadaian);
+        const ubs = Math.round(g1.antam * 1.018 / 1000) * 1000;
+        document.getElementById('bUbs').textContent = fmtRp(ubs);
+      }
+    }
+  } catch(e) {}
+}
+
+function filterData(range) {
+  const now = new Date();
+  let from;
+  switch(range) {
+    case '1W': from = new Date(now - 7*86400000); break;
+    case '1M': from = new Date(now - 30*86400000); break;
+    case '1Y': from = new Date(now - 365*86400000); break;
+    case '5Y': from = new Date(now - 5*365*86400000); break;
+    case 'ALL': from = new Date('2000-01-01'); break;
+  }
+  return allData.filter(d => new Date(d.date) >= from);
+}
+
+function getStats(data) {
+  if (!data.length) return {};
+  const prices = data.map(d => d.price);
+  return {
+    high: Math.max(...prices),
+    low: Math.min(...prices),
+    avg: prices.reduce((a,b)=>a+b,0)/prices.length,
+    diff: prices[prices.length-1] - prices[0]
+  };
+}
+
+function drawChart(range) {
+  const data = filterData(range);
+  const loading = document.getElementById('chartLoading');
+  if (!data.length) { loading.textContent = 'Tidak ada data'; return; }
+  loading.style.display = 'none';
+
+  const stats = getStats(data);
+  document.getElementById('statHigh').textContent = fmtUsd(stats.high);
+  document.getElementById('statLow').textContent = fmtUsd(stats.low);
+  document.getElementById('statAvg').textContent = fmtUsd(stats.avg);
+  const diffEl = document.getElementById('statDiff');
+  diffEl.textContent = (stats.diff>=0?'+':'') + fmtUsd(stats.diff);
+  diffEl.style.color = stats.diff >= 0 ? 'var(--green)' : 'var(--red)';
+
+  const labels = data.map(d => d.date);
+  const pricesUSD = data.map(d => d.price);
+  const pricesIDR = data.map(d => (d.price / OZ_TO_GRAM) * usdIdrRate);
+
+  if (chart) chart.destroy();
+
+  const ctx = document.getElementById('goldChart').getContext('2d');
+  chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'USD/oz',
+          data: pricesUSD,
+          borderColor: '#f0b90b',
+          backgroundColor: 'rgba(240,185,11,0.08)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: data.length > 100 ? 0 : 2,
+          pointHoverRadius: 5,
+          borderWidth: 2,
+          yAxisID: 'y'
+        },
+        {
+          label: 'Rp/gram',
+          data: pricesIDR,
+          borderColor: '#2ecc71',
+          backgroundColor: 'rgba(46,204,113,0.05)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: data.length > 100 ? 0 : 2,
+          pointHoverRadius: 5,
+          borderWidth: 2,
+          yAxisID: 'y1'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { labels: { color: '#8a8d98', font: { size: 12 } } },
+        tooltip: {
+          backgroundColor: '#1a1d29',
+          titleColor: '#e1e4ea',
+          bodyColor: '#e1e4ea',
+          borderColor: '#2a2d3a',
+          borderWidth: 1,
+          callbacks: {
+            label: (ctx) => {
+              if (ctx.datasetIndex === 0) return 'USD: ' + fmtUsd(ctx.parsed.y);
+              return 'Rp: ' + fmtRp(ctx.parsed.y);
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: '#8a8d98', maxTicksLimit: 8, font: { size: 11 } },
+          grid: { color: '#2a2d3a33' }
+        },
+        y: {
+          position: 'left',
+          ticks: { color: '#f0b90b', font: { size: 11 }, callback: v => '$' + v.toLocaleString() },
+          grid: { color: '#2a2d3a33' }
+        },
+        y1: {
+          position: 'right',
+          ticks: { color: '#2ecc71', font: { size: 11 }, callback: v => 'Rp' + (v/1000000).toFixed(1) + 'jt' },
+          grid: { drawOnChartArea: false }
+        }
+      }
+    }
+  });
+}
+
+function setRange(r) {
+  currentRange = r;
+  document.querySelectorAll('.range-btns button').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn' + r).classList.add('active');
+  drawChart(r);
+}
+
+// Init
+(async () => {
+  document.getElementById('chartLoading').textContent = 'Memuat data...';
+  await Promise.all([fetchRate(), fetchGoldHistory(), fetchCurrent(), fetchBrands()]);
+  drawChart(currentRange);
+})();
+</script>
+</body>
+</html>
