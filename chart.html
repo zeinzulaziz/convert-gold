@@ -209,8 +209,7 @@
 </div>
 
 <div class="footer">
-  Data dari freegoldapi.com (LBMA/Yahoo Finance/World Bank) | Kurs dari Frankfurter (ECB) | Antam dari hargaemas.com<br>
-  Attribution: Minted Metal (mintedmetal.com)
+  Data historis & live dari xaus.com (XAU/USD) | Kurs dari Frankfurter (ECB) | Antam dari hargaemas.com
 </div>
 
 <script>
@@ -233,28 +232,39 @@ async function fetchRate() {
   } catch(e) {}
 }
 
-// Fetch historical gold data
+// Fetch historical gold data (5 tahun, update harian sampai hari ini)
 async function fetchGoldHistory() {
   try {
-    const r = await fetch('https://freegoldapi.com/data/latest.json');
-    allData = await r.json();
-    // Filter only USD data from 2000+
-    allData = allData.filter(d => d.date >= '2000-01-01' && d.source.includes('yahoo') || d.source.includes('worldbank'));
+    const r = await fetch('https://xaus.com/api/v1/history?symbol=XAUUSD&interval=daily');
+    const d = await r.json();
+    if (!d.points || !d.points.length) throw new Error('No data');
+    allData = d.points.map(p => ({ date: p.d, price: p.c, source: 'xaus' }));
     allData.sort((a,b) => a.date.localeCompare(b.date));
   } catch(e) {
-    document.getElementById('chartLoading').textContent = 'Gagal memuat data';
+    // Fallback ke sumber lama jika xaus gagal
+    try {
+      const r = await fetch('https://freegoldapi.com/data/latest.json');
+      allData = await r.json();
+      allData = allData.filter(d => d.date >= '2020-01-01' && d.source.includes('yahoo'));
+      allData.sort((a,b) => a.date.localeCompare(b.date));
+    } catch(e2) {
+      document.getElementById('chartLoading').textContent = 'Gagal memuat data';
+    }
   }
 }
 
-// Fetch current price
+// Fetch current price (spot live, data hari ini)
 async function fetchCurrent() {
   try {
-    const r = await fetch('https://mintedmetal.com/api/prices.json');
+    const r = await fetch('https://xaus.com/api/v1/spot');
     const d = await r.json();
-    liveGoldPrice = d.metals.gold.price;
-    const prev = d.metals.gold.previousPrice;
-    const change = liveGoldPrice - prev;
-    const pct = ((change/prev)*100).toFixed(2);
+    liveGoldPrice = d.spot_usd_oz;
+    const today = new Date().toISOString().split('T')[0];
+
+    const prev = [...allData].reverse().find(p => p.date < today);
+    const prevPrice = prev ? prev.price : liveGoldPrice;
+    const change = liveGoldPrice - prevPrice;
+    const pct = prevPrice ? ((change/prevPrice)*100).toFixed(2) : '0.00';
     const isUp = change >= 0;
 
     document.getElementById('livePrice').textContent = fmtUsd(liveGoldPrice);
@@ -262,11 +272,27 @@ async function fetchCurrent() {
     document.getElementById('liveChange').style.color = isUp ? 'var(--green)' : 'var(--red)';
     document.getElementById('liveRp').textContent = fmtRp((liveGoldPrice / OZ_TO_GRAM) * usdIdrRate) + ' /gram';
 
-    // Add live point to data
-    const today = new Date().toISOString().split('T')[0];
-    allData.push({ date: today, price: liveGoldPrice, source: 'live' });
+    const existing = allData.find(p => p.date === today);
+    if (existing) existing.price = liveGoldPrice;
+    else allData.push({ date: today, price: liveGoldPrice, source: 'live' });
   } catch(e) {
-    document.getElementById('livePrice').textContent = 'Gagal load';
+    // Fallback ke mintedmetal jika xaus gagal
+    try {
+      const r = await fetch('https://mintedmetal.com/api/prices.json');
+      const d = await r.json();
+      liveGoldPrice = d.metals.gold.price;
+      const prevDay = d.metals.gold.previousPrice;
+      const change = liveGoldPrice - prevDay;
+      const pct = ((change/prevDay)*100).toFixed(2);
+      const isUp = change >= 0;
+      document.getElementById('livePrice').textContent = fmtUsd(liveGoldPrice);
+      document.getElementById('liveChange').textContent = (isUp?'+':'') + change.toFixed(2) + ' (' + (isUp?'+':'') + pct + '%)';
+      document.getElementById('liveChange').style.color = isUp ? 'var(--green)' : 'var(--red)';
+      document.getElementById('liveRp').textContent = fmtRp((liveGoldPrice / OZ_TO_GRAM) * usdIdrRate) + ' /gram';
+      document.getElementById('chartLoading').textContent = 'Data sementara (mintedmetal.com)';
+    } catch(e2) {
+      document.getElementById('livePrice').textContent = 'Gagal load';
+    }
   }
 }
 
