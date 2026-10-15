@@ -1,0 +1,7 @@
+name = "convert-gold-cron"
+main = "index.js"
+compatibility_date = "2024-11-01"
+
+# Jalan tiap hari jam 01:00 UTC (08:00 WIB). Ubah sesuai kebutuhan.
+[triggers]
+crons = ["0 1 * * *"]
