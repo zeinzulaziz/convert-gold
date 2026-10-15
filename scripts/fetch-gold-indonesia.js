@@ -61,8 +61,14 @@ function parsePrices(html) {
 }
 
 function parseUpdatedAt(html) {
-  const m = html.match(/class="time-updated"[^>]*>([^<]+)</);
-  return m ? m[1].trim() : null;
+  // Ambil timestamp section "Emas Antam", BUKAN "Emas Spot".
+  // Halaman punya dua elemen time-updated; yang pertama adalah Emas Spot
+  // (update tiap menit), sedangkan harga Antam/Pegadaian update 1x sehari.
+  const antam = html.match(/<span>\s*Emas Antam\s*<\/span>[\s\S]{0,200}?class="time-updated"[^>]*>([^<]+)</);
+  if (antam) return antam[1].trim();
+  // Fallback kalau markup berubah: pakai time-updated pertama (perilaku lama).
+  const any = html.match(/class="time-updated"[^>]*>([^<]+)</);
+  return any ? any[1].trim() : null;
 }
 
 function isValid(prices) {
