@@ -299,19 +299,9 @@ async function fetchCurrent() {
 // Fetch brand prices
 async function fetchBrands() {
   try {
-    const proxied = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://hargaemas.com/');
-    const r = await fetch(proxied);
-    const html = await r.text();
-    if (!html) throw new Error('empty');
-    const prices = [];
-    const regex = /<tr class="col-antam"><td>([\s\S]*?)<\/td>\s*<td[^>]*>([\s\S]*?)<\/td>\s*<td[^>]*>([\s\S]*?)<\/td><\/tr>/g;
-    let m;
-    while ((m = regex.exec(html)) !== null) {
-      const gram = m[1].replace(/<[^>]*>/g,'').trim();
-      const antamStr = m[2].replace(/<[^>]*>/g,'').replace(/[^0-9.]/g,'').trim();
-      const pegStr = m[3].replace(/<[^>]*>/g,'').replace(/[^0-9.]/g,'').trim();
-      if (antamStr && gram) prices.push({gram, antam: parseInt(antamStr.replace(/\./g,''))||0, pegadaian: parseInt(pegStr.replace(/\./g,''))||0});
-    }
+    const r = await fetch('./data/gold-indonesia.json');
+    const d = await r.json();
+    const prices = d.prices || [];
     const g1 = prices.find(p => p.gram === '1' || p.gram === '1.00');
     if (g1) {
       document.getElementById('bAntam').textContent = fmtRp(g1.antam);

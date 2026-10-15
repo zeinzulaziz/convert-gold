@@ -1215,11 +1215,10 @@ async function fetchGoldPrice() {
 async function fetchBrandPrices() {
   const statusEl = document.getElementById('brandStatus');
   try {
-    const proxied = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://hargaemas.com/');
-    const res = await fetch(proxied);
-    const html = await res.text();
-    if (!html || html.length < 100) throw new Error('Empty response');
-    const prices = parseHargaEmas(html);
+    const res = await fetch('./data/gold-indonesia.json');
+    if (!res.ok) throw new Error('JSON not found');
+    const data = await res.json();
+    const prices = data.prices || [];
     if (prices.length === 0) throw new Error('No data');
     const antam1g = prices.find(p => p.gram === '1' || p.gram === '1.00');
     if (!antam1g) throw new Error('No 1g data');
@@ -1234,31 +1233,11 @@ async function fetchBrandPrices() {
       document.getElementById('peg1gDiff').textContent = fmt(antam1g.pegadaian - spotRp) + ' vs spot';
       document.getElementById('ubs1gDiff').textContent = fmt(ubsPrice - spotRp) + ' vs spot';
     }
-    const ts = parseHargaEmasTs(html);
-    statusEl.textContent = 'hargaemas.com' + (ts ? ' | ' + ts : '');
+    const ts = data.updatedAt || data.fetchedAt;
+    statusEl.textContent = (data.source || 'hargaemas.com') + (ts ? ' | ' + ts : '');
   } catch (e) {
-    statusEl.textContent = 'Gagal memuat harga Antam/UBS dari proxy';
+    statusEl.textContent = 'Gagal memuat data/gold-indonesia.json';
   }
-}
-
-function parseHargaEmas(html) {
-  const prices = [];
-  const regex = /<tr class="col-antam"><td>([\s\S]*?)<\/td>\s*<td[^>]*>([\s\S]*?)<\/td>\s*<td[^>]*>([\s\S]*?)<\/td><\/tr>/g;
-  let m;
-  while ((m = regex.exec(html)) !== null) {
-    const gram = m[1].replace(/<[^>]*>/g, '').trim();
-    const antamStr = m[2].replace(/<[^>]*>/g, '').replace(/[^0-9.]/g, '').trim();
-    const pegStr = m[3].replace(/<[^>]*>/g, '').replace(/[^0-9.]/g, '').trim();
-    if (antamStr && gram) {
-      prices.push({ gram, antam: parseInt(antamStr.replace(/\./g,''))||0, pegadaian: parseInt(pegStr.replace(/\./g,''))||0 });
-    }
-  }
-  return prices;
-}
-
-function parseHargaEmasTs(html) {
-  const m = html.match(/class="time-updated"[^>]*>([^<]+)</);
-  return m ? m[1].trim() : null;
 }
 
 // Init
