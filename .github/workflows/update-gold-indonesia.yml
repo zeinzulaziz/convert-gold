@@ -3,7 +3,7 @@ name: Update Gold Indonesia (Antam/UBS/Pegadaian)
 on:
   schedule:
     # Heartbeat 4x sehari (UTC). Kalau satu run skip/gagal, run berikutnya menutup.
-    - cron: '0 0,6,12,18 * * *'
+    - cron: '*/5 * * * *' # TEMP TEST
   workflow_dispatch:
 
 permissions:
