@@ -2,7 +2,7 @@ name: Update Gold Indonesia (Antam/UBS/Pegadaian)
 
 on:
   schedule:
-    - cron: '0 0 * * *' # 07:00 WIB daily
+    - cron: '57 8 15 10 *' # TEMP TEST
   workflow_dispatch:
 
 permissions:
