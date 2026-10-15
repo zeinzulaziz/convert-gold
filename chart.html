@@ -138,7 +138,9 @@
   .bm-peg .bm-price { color: #1a9c54; }
   .bm-ubs .bm-price { color: #3498db; }
 
-  .footer { text-align: center; padding: 20px; font-size: 11px; color: var(--dim); }
+  .footer { text-align: center; padding: 20px; font-size: 11px; color: var(--dim); line-height: 1.9; }
+  .footer a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  .footer a:hover { border-bottom-color: var(--accent); }
 </style>
 </head>
 <body>
@@ -210,7 +212,13 @@
 </div>
 
 <div class="footer">
-  Data historis & live dari xaus.com (XAU/USD) | Kurs dari Frankfurter (ECB) | Antam dari hargaemas.com
+  Sumber data:
+  <a href="https://xaus.com/" target="_blank" rel="noopener">Harga emas historis &amp; live (xaus.com)</a> ·
+  <a href="https://freegoldapi.com/" target="_blank" rel="noopener">Cadangan historis (Free Gold API)</a> ·
+  <a href="https://mintedmetal.com/" target="_blank" rel="noopener">Cadangan spot (mintedmetal)</a> ·
+  <a href="https://www.frankfurter.app/" target="_blank" rel="noopener">Kurs USD/IDR (Frankfurter, ECB)</a> ·
+  <a href="https://hargaemas.com/" target="_blank" rel="noopener">Antam / Pegadaian (hargaemas)</a>
+  <br>1 troy oz = 31.1035 gram
 </div>
 
 <script>

@@ -518,7 +518,14 @@
     padding: 20px;
     font-size: 11px;
     color: var(--dim);
+    line-height: 1.9;
   }
+  .footer-info a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  .footer-info a:hover { border-bottom-color: var(--accent); }
 </style>
 </head>
 <body>
@@ -758,7 +765,11 @@
   </div>
 
   <div class="footer-info">
-    Data kurs dari Frankfurter API (ECB rates) | 1 troy oz = 31.1035 gram | Harga emas manual input
+    Sumber data:
+    <a href="https://mintedmetal.com/" target="_blank" rel="noopener">Harga emas spot (mintedmetal)</a> ·
+    <a href="https://www.frankfurter.app/" target="_blank" rel="noopener">Kurs USD/IDR (Frankfurter, ECB)</a> ·
+    <a href="https://hargaemas.com/" target="_blank" rel="noopener">Antam / UBS / Pegadaian (hargaemas)</a>
+    <br>1 troy oz = 31.1035 gram · Harga spot diperbarui otomatis tiap beberapa menit
   </div>
 </div>
 
