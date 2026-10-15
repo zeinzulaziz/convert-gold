@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:,">
 <title>Gold Price Calculator - Trader Edition</title>
 <style>
   :root {
@@ -1214,30 +1215,68 @@ async function fetchGoldPrice() {
 // Fetch Antam / UBS / Pegadaian prices (1 gram only)
 async function fetchBrandPrices() {
   const statusEl = document.getElementById('brandStatus');
-  try {
-    const res = await fetch('./data/gold-indonesia.json');
-    if (!res.ok) throw new Error('JSON not found');
-    const data = await res.json();
-    const prices = data.prices || [];
-    if (prices.length === 0) throw new Error('No data');
-    const antam1g = prices.find(p => p.gram === '1' || p.gram === '1.00');
-    if (!antam1g) throw new Error('No 1g data');
-    document.getElementById('antam1g').textContent = formatRp(antam1g.antam);
-    document.getElementById('peg1g').textContent = formatRp(antam1g.pegadaian);
-    const ubsPrice = Math.round(antam1g.antam * 1.018 / 1000) * 1000;
-    document.getElementById('ubs1g').textContent = formatRp(ubsPrice);
-    if (liveGoldPrice && usdIdrRate) {
-      const spotRp = (liveGoldPrice / OZ_TO_GRAM) * usdIdrRate;
-      const fmt = (v) => (v >= 0 ? '+' : '') + formatRpFull(v);
-      document.getElementById('antam1gDiff').textContent = fmt(antam1g.antam - spotRp) + ' vs spot';
-      document.getElementById('peg1gDiff').textContent = fmt(antam1g.pegadaian - spotRp) + ' vs spot';
-      document.getElementById('ubs1gDiff').textContent = fmt(ubsPrice - spotRp) + ' vs spot';
-    }
-    const ts = data.updatedAt || data.fetchedAt;
-    statusEl.textContent = (data.source || 'hargaemas.com') + (ts ? ' | ' + ts : '');
-  } catch (e) {
-    statusEl.textContent = 'Gagal memuat data/gold-indonesia.json';
+  let data = null;
+  try { data = await fetchBrandFromJson(); } catch (e) {}
+  // Fallback: kalau JSON kosong/basi, scrape langsung via proxy.
+  if (!data || !data.fresh) {
+    try { data = await fetchBrandFromProxy(); } catch (e) {}
   }
+
+  if (!data || !data.antam) {
+    statusEl.textContent = 'Gagal memuat harga Antam/UBS';
+    return;
+  }
+
+  document.getElementById('antam1g').textContent = formatRp(data.antam);
+  document.getElementById('peg1g').textContent = formatRp(data.pegadaian);
+  const ubsPrice = Math.round(data.antam * 1.018 / 1000) * 1000;
+  document.getElementById('ubs1g').textContent = formatRp(ubsPrice);
+  if (liveGoldPrice && usdIdrRate) {
+    const spotRp = (liveGoldPrice / OZ_TO_GRAM) * usdIdrRate;
+    const fmt = (v) => (v >= 0 ? '+' : '') + formatRpFull(v);
+    document.getElementById('antam1gDiff').textContent = fmt(data.antam - spotRp) + ' vs spot';
+    document.getElementById('peg1gDiff').textContent = fmt(data.pegadaian - spotRp) + ' vs spot';
+    document.getElementById('ubs1gDiff').textContent = fmt(ubsPrice - spotRp) + ' vs spot';
+  }
+  statusEl.textContent = data.source + (data.ts ? ' | ' + data.ts : ' (proxy)');
+}
+
+// Sumber utama: data/gold-indonesia.json (di-update GitHub Action harian).
+// Fallback: scrape hargaemas.com lewat proxy CORS kalau JSON kosong/basi > 3 hari.
+const BRAND_MAX_AGE_MS = 3 * 24 * 3600 * 1000;
+
+function parseHargaEmas(html) {
+  const prices = [];
+  const regex = /<tr class="col-antam"><td>([\s\S]*?)<\/td>\s*<td[^>]*>([\s\S]*?)<\/td>\s*<td[^>]*>([\s\S]*?)<\/td><\/tr>/g;
+  let m;
+  while ((m = regex.exec(html)) !== null) {
+    const gram = m[1].replace(/<[^>]*>/g, '').trim();
+    const antam = parseInt(m[2].replace(/<[^>]*>/g, '').replace(/[^0-9]/g, ''), 10) || 0;
+    const pegadaian = parseInt(m[3].replace(/<[^>]*>/g, '').replace(/[^0-9]/g, ''), 10) || 0;
+    if (gram && antam > 0) prices.push({ gram, antam, pegadaian });
+  }
+  return prices;
+}
+
+async function fetchBrandFromJson() {
+  const res = await fetch('./data/gold-indonesia.json', { cache: 'no-store' });
+  if (!res.ok) throw new Error('JSON ' + res.status);
+  const data = await res.json();
+  const prices = data.prices || [];
+  const one = prices.find(p => p.gram === '1' || p.gram === '1.00');
+  if (!one || !one.antam) throw new Error('Data kosong');
+  const fetched = data.fetchedAt ? Date.parse(data.fetchedAt) : 0;
+  const fresh = !!fetched && (Date.now() - fetched) < BRAND_MAX_AGE_MS;
+  return { antam: one.antam, pegadaian: one.pegadaian, source: data.source || 'hargaemas.com', ts: data.updatedAt || data.fetchedAt, fresh };
+}
+
+async function fetchBrandFromProxy() {
+  const proxied = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://hargaemas.com/');
+  const res = await fetch(proxied, { cache: 'no-store' });
+  const html = await res.text();
+  const one = parseHargaEmas(html).find(p => p.gram === '1' || p.gram === '1.00');
+  if (!one || !one.antam) throw new Error('Proxy parse kosong');
+  return { antam: one.antam, pegadaian: one.pegadaian, source: 'hargaemas.com', ts: null, fresh: true };
 }
 
 // Init

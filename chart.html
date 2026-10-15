@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:,">
 <title>Gold Chart - Harga Emas Indonesia</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
@@ -296,20 +297,46 @@ async function fetchCurrent() {
   }
 }
 
-// Fetch brand prices
+// Fetch brand prices (JSON harian, fallback proxy kalau kosong/basi)
+const BRAND_MAX_AGE_MS = 3 * 24 * 3600 * 1000;
+
+function parseHargaEmas(html) {
+  const prices = [];
+  const regex = /<tr class="col-antam"><td>([\s\S]*?)<\/td>\s*<td[^>]*>([\s\S]*?)<\/td>\s*<td[^>]*>([\s\S]*?)<\/td><\/tr>/g;
+  let m;
+  while ((m = regex.exec(html)) !== null) {
+    const gram = m[1].replace(/<[^>]*>/g, '').trim();
+    const antam = parseInt(m[2].replace(/<[^>]*>/g, '').replace(/[^0-9]/g, ''), 10) || 0;
+    const peg = parseInt(m[3].replace(/<[^>]*>/g, '').replace(/[^0-9]/g, ''), 10) || 0;
+    if (gram && antam > 0) prices.push({ gram, antam, pegadaian: peg });
+  }
+  return prices;
+}
+
 async function fetchBrands() {
+  let g1 = null;
   try {
-    const r = await fetch('./data/gold-indonesia.json');
+    const r = await fetch('./data/gold-indonesia.json', { cache: 'no-store' });
     const d = await r.json();
-    const prices = d.prices || [];
-    const g1 = prices.find(p => p.gram === '1' || p.gram === '1.00');
-    if (g1) {
-      document.getElementById('bAntam').textContent = fmtRp(g1.antam);
-      document.getElementById('bPeg').textContent = fmtRp(g1.pegadaian);
-      const ubs = Math.round(g1.antam * 1.018 / 1000) * 1000;
-      document.getElementById('bUbs').textContent = fmtRp(ubs);
-    }
-  } catch(e) {}
+    const fetched = d.fetchedAt ? Date.parse(d.fetchedAt) : 0;
+    const fresh = !!fetched && (Date.now() - fetched) < BRAND_MAX_AGE_MS;
+    const one = (d.prices || []).find(p => p.gram === '1' || p.gram === '1.00');
+    if (one && one.antam && fresh) g1 = one;
+  } catch (e) {}
+  if (!g1) {
+    try {
+      const p = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://hargaemas.com/');
+      const r = await fetch(p, { cache: 'no-store' });
+      const one = parseHargaEmas(await r.text()).find(x => x.gram === '1' || x.gram === '1.00');
+      if (one && one.antam) g1 = one;
+    } catch (e) {}
+  }
+  if (g1) {
+    document.getElementById('bAntam').textContent = fmtRp(g1.antam);
+    document.getElementById('bPeg').textContent = fmtRp(g1.pegadaian);
+    const ubs = Math.round(g1.antam * 1.018 / 1000) * 1000;
+    document.getElementById('bUbs').textContent = fmtRp(ubs);
+  }
 }
 
 function filterData(range) {
