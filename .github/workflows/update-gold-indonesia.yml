@@ -1,9 +1,8 @@
 name: Update Gold Indonesia (Antam/UBS/Pegadaian)
 
 on:
-  schedule:
-    # Heartbeat 4x sehari (UTC). Kalau satu run skip/gagal, run berikutnya menutup.
-    - cron: '0 0,6,12,18 * * *'
+  # Tidak pakai `schedule` GitHub (sering telat/skip). Dipanggil dari
+  # scheduler eksternal (cron-job.org) lewat workflow_dispatch.
   workflow_dispatch:
 
 permissions:

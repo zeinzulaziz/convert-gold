@@ -17,10 +17,11 @@ pengaman terakhir.
 Sifat:
 - Scrape server-side (tanpa CORS, tanpa proxy pihak ketiga).
 - Retry + timeout + validasi. Kalau hasil kosong/aneh, file lama **tidak ditimpa**.
-- Trigger: `schedule` (cron) + `workflow_dispatch` (manual).
+- Trigger: **hanya `workflow_dispatch`** (dipanggil scheduler eksternal, lihat Lapis 2).
+  Jadwal `schedule` GitHub sengaja dihapus karena sering telat/skip.
 
-Kelemahan: **cron GitHub tidak bisa diandalkan** (sering telat atau skip). Karena
-itu ada lapis 2.
+Kelemahan: tanpa pemicu eksternal, file tidak akan update sendiri (makanya ada Lapis 2,
+dan Lapis 3 menutup kalau semua gagal).
 
 ---
 
