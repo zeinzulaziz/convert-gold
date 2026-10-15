@@ -2,11 +2,16 @@ name: Update Gold Indonesia (Antam/UBS/Pegadaian)
 
 on:
   schedule:
-    - cron: '0 0 * * *' # 07:00 WIB daily
+    # Heartbeat 4x sehari (UTC). Kalau satu run skip/gagal, run berikutnya menutup.
+    - cron: '0 0,6,12,18 * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
+
+concurrency:
+  group: update-gold-indonesia
+  cancel-in-progress: false
 
 jobs:
   update:
@@ -21,42 +26,16 @@ jobs:
           node-version: '20'
 
       - name: Fetch & parse hargaemas.com
-        run: |
-          node << 'SCRIPT'
-          const https = require('https');
-          const fs = require('fs');
-          function fetchHTTPS(url){
-            return new Promise((resolve,reject)=>{
-              https.get(url,{headers:{'User-Agent':'Mozilla/5.0'}},res=>{
-                if(res.statusCode>=300&&res.statusCode<400&&res.headers.location)return fetchHTTPS(res.headers.location).then(resolve).catch(reject);
-                let d='';res.on('data',c=>d+=c);res.on('end',()=>resolve(d));
-              }).on('error',reject);
-            });
-          }
-          function parse(html){
-            const prices=[];
-            const re=/<tr class="col-antam"><td>([\s\S]*?)<\/td>\s*<td[^>]*>([\s\S]*?)<\/td>\s*<td[^>]*>([\s\S]*?)<\/td><\/tr>/g;
-            let m;while((m=re.exec(html))!==null){
-              const gram=m[1].replace(/<[^>]*>/g,'').trim();
-              const ant=m[2].replace(/<[^>]*>/g,'').replace(/[^0-9.]/g,'').trim();
-              const peg=m[3].replace(/<[^>]*>/g,'').replace(/[^0-9.]/g,'').trim();
-              if(ant&&gram) prices.push({gram, antam: parseInt(ant.replace(/\./g,''))||0, pegadaian: parseInt(peg.replace(/\./g,''))||0});
-            }
-            return prices;
-          }
-          function ts(html){const m=html.match(/class="time-updated"[^>]*>([^<]+)</);return m?m[1].trim():null;}
-          fetchHTTPS('https://hargaemas.com/').then(html=>{
-            const prices=parse(html);
-            const updatedAt=ts(html);
-            fs.mkdirSync('data',{recursive:true});
-            fs.writeFileSync('data/gold-indonesia.json', JSON.stringify({source:'hargaemas.com', updatedAt, prices, fetchedAt:new Date().toISOString()},null,2));
-            console.log('done', prices.length);
-          }).catch(e=>{console.error(e);process.exit(1);});
-          SCRIPT
+        run: node scripts/fetch-gold-indonesia.js
 
       - name: Commit & push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/gold-indonesia.json
-          if git diff --cached --quiet; then echo "no change"; else git commit -m "chore: update gold indonesia prices"; git push; fi
+          if git diff --cached --quiet; then
+            echo "Tidak ada perubahan data."
+          else
+            git commit -m "chore: update gold indonesia prices"
+            git push
+          fi
