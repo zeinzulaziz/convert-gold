@@ -1215,24 +1215,18 @@ async function fetchGoldPrice() {
 async function fetchBrandPrices() {
   const statusEl = document.getElementById('brandStatus');
   try {
-    const res = await fetch('/.netlify/functions/gold-prices');
-    if (!res.ok) throw new Error('Function not found');
-    const data = await res.json();
-    if (data.error || !data.prices || data.prices.length === 0) throw new Error(data.error || 'No data');
-
-    const prices = data.prices;
-    const antam1g = prices.find(p => p.gram === '1');
+    const proxied = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://hargaemas.com/');
+    const res = await fetch(proxied);
+    const html = await res.text();
+    if (!html || html.length < 100) throw new Error('Empty response');
+    const prices = parseHargaEmas(html);
+    if (prices.length === 0) throw new Error('No data');
+    const antam1g = prices.find(p => p.gram === '1' || p.gram === '1.00');
     if (!antam1g) throw new Error('No 1g data');
-
     document.getElementById('antam1g').textContent = formatRp(antam1g.antam);
     document.getElementById('peg1g').textContent = formatRp(antam1g.pegadaian);
-
-    // UBS from pegadaian data or estimate
-    const ubsData = prices.find(p => p.gram === '1' && p.brand === 'UBS');
-    const ubsPrice = ubsData ? ubsData.antam : Math.round(antam1g.antam * 1.018 / 1000) * 1000;
+    const ubsPrice = Math.round(antam1g.antam * 1.018 / 1000) * 1000;
     document.getElementById('ubs1g').textContent = formatRp(ubsPrice);
-
-    // Diff vs spot
     if (liveGoldPrice && usdIdrRate) {
       const spotRp = (liveGoldPrice / OZ_TO_GRAM) * usdIdrRate;
       const fmt = (v) => (v >= 0 ? '+' : '') + formatRpFull(v);
@@ -1240,11 +1234,31 @@ async function fetchBrandPrices() {
       document.getElementById('peg1gDiff').textContent = fmt(antam1g.pegadaian - spotRp) + ' vs spot';
       document.getElementById('ubs1gDiff').textContent = fmt(ubsPrice - spotRp) + ' vs spot';
     }
-
-    statusEl.textContent = (data.source || '') + ' | ' + (data.updatedAt || '');
+    const ts = parseHargaEmasTs(html);
+    statusEl.textContent = 'hargaemas.com' + (ts ? ' | ' + ts : '');
   } catch (e) {
-    statusEl.textContent = 'Harga Antam/UBS perlu Netlify Functions (deploy ke Netlify)';
+    statusEl.textContent = 'Gagal memuat harga Antam/UBS dari proxy';
   }
+}
+
+function parseHargaEmas(html) {
+  const prices = [];
+  const regex = /<tr class="col-antam"><td>([\s\S]*?)<\/td>\s*<td[^>]*>([\s\S]*?)<\/td>\s*<td[^>]*>([\s\S]*?)<\/td><\/tr>/g;
+  let m;
+  while ((m = regex.exec(html)) !== null) {
+    const gram = m[1].replace(/<[^>]*>/g, '').trim();
+    const antamStr = m[2].replace(/<[^>]*>/g, '').replace(/[^0-9.]/g, '').trim();
+    const pegStr = m[3].replace(/<[^>]*>/g, '').replace(/[^0-9.]/g, '').trim();
+    if (antamStr && gram) {
+      prices.push({ gram, antam: parseInt(antamStr.replace(/\./g,''))||0, pegadaian: parseInt(pegStr.replace(/\./g,''))||0 });
+    }
+  }
+  return prices;
+}
+
+function parseHargaEmasTs(html) {
+  const m = html.match(/class="time-updated"[^>]*>([^<]+)</);
+  return m ? m[1].trim() : null;
 }
 
 // Init
