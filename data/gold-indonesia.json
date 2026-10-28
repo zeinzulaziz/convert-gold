@@ -1,67 +1,67 @@
 {
   "source": "hargaemas.com",
-  "updatedAt": "26 Okt 2026 07:55",
+  "updatedAt": "27 Okt 2026 08:33",
   "prices": [
     {
       "gram": "0,5",
-      "antam": 1320000,
-      "pegadaian": 1340000
+      "antam": 1325000,
+      "pegadaian": 1345000
     },
     {
       "gram": "1",
-      "antam": 2540000,
-      "pegadaian": 2579000
+      "antam": 2550000,
+      "pegadaian": 2589000
     },
     {
       "gram": "2",
-      "antam": 5020000,
-      "pegadaian": 5096000
+      "antam": 5040000,
+      "pegadaian": 5116000
     },
     {
       "gram": "3",
-      "antam": 7505000,
-      "pegadaian": 7618000
+      "antam": 7535000,
+      "pegadaian": 7649000
     },
     {
       "gram": "5",
-      "antam": 12475000,
-      "pegadaian": 12663000
+      "antam": 12525000,
+      "pegadaian": 12713000
     },
     {
       "gram": "10",
-      "antam": 24895000,
-      "pegadaian": 25269000
+      "antam": 24995000,
+      "pegadaian": 25370000
     },
     {
       "gram": "25",
-      "antam": 62112000,
-      "pegadaian": 63044000
+      "antam": 62362000,
+      "pegadaian": 63298000
     },
     {
       "gram": "50",
-      "antam": 124145000,
-      "pegadaian": 126008000
+      "antam": 124645000,
+      "pegadaian": 126515000
     },
     {
       "gram": "100",
-      "antam": 248212000,
-      "pegadaian": 251936000
+      "antam": 249212000,
+      "pegadaian": 252951000
     },
     {
       "gram": "250",
-      "antam": 620265000,
+      "antam": 622765000,
       "pegadaian": 0
     },
     {
       "gram": "500",
-      "antam": 1240320000,
+      "antam": 1245320000,
       "pegadaian": 0
     },
     {
       "gram": "1000",
-      "antam": 2480600000,
+      "antam": 2490600000,
       "pegadaian": 0
     }
   ],
-  "fetchedAt": "2026-10-27T01:00:37.748Z"
+  "fetchedAt": "2026-10-28T01:00:40.134Z"
 }
