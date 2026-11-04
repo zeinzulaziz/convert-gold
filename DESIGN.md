@@ -21,7 +21,7 @@ colors:
   red-soft: "rgba(185, 56, 42, 0.1)"
   antam: "#B4472F"
   pegadaian: "#177A46"
-  ubs: "#2F6FB4"
+  ubs: "#2C64A1"
 typography:
   display:
     fontFamily: "'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
@@ -274,6 +274,13 @@ Surface putih, border 1px, radius 16/12px, padding 20–28px; hover kartu merek:
 
 ### Inputs
 Well background, border 1px, radius 10px, tinggi 48px, teks 15px 600 tabular, placeholder dim; focus border gold. Grup konteks (entry=gold / target=hijau / SL=merah) via border-left 2px.
+
+### Brand Marks (merek logam)
+Kartu 1g memakai mark merek di kiri dan label "1 GRAM" dim di kanan (tag pills berwarna dihapus):
+- **Antam:** wordmark "ANTAM" 800, tracking 0.1em, Antam Red (teks, bukan logo resmi).
+- **Pegadaian:** logo resmi SVG (`assets/pegadaian-logo.svg`, public domain, © PT Pegadaian, diekstrak dari laporan tahunan Pegadaian) ditaruh di atas chip putih kecil agar terbaca di kedua tema.
+- **UBS:** wordmark "UBS" 800, tracking 0.1em, UBS Blue. UBS tetap berlabel estimasi; bukan artwork resmi UBS.
+Wordmark Antam/UBS = tipografi teks biasa, bukan reproduksi logo resmi (Antam/UBS tidak menyediakan aset yang dapat di-fetch).
 
 ### Navigation
 Header sticky translucent (surface 88% + blur). Wordmark: mark ingot + "GOLD CALC" 800 + tagline "EMAS INDONESIA, LIVE" 10px dim. Kanan: link Grafik (ikon + teks 44px), dot kurs live + teks, tombol theme toggle 44px (ikon moon/sun).
