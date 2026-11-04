@@ -3,396 +3,244 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" href="data:,">
-<title>Gold Chart - Harga Emas Indonesia</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-<style>
-  :root {
-    --bg: #0f1117;
-    --card: #1a1d29;
-    --border: #2a2d3a;
-    --accent: #f0b90b;
-    --green: #2ecc71;
-    --red: #e74c3c;
-    --text: #e1e4ea;
-    --dim: #8a8d98;
-    --input-bg: #252836;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Segoe UI', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-
-  .header {
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-    padding: 14px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .header h1 { font-size: 18px; font-weight: 700; color: var(--accent); }
-  .header a { color: var(--dim); text-decoration: none; font-size: 13px; }
-  .header a:hover { color: var(--accent); }
-
-  .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
-
-  .price-banner {
-    background: linear-gradient(135deg, #1a1d29, #252836);
-    border: 1px solid var(--accent);
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  .price-banner .label { font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; }
-  .price-banner .price { font-size: 32px; font-weight: 800; color: var(--accent); margin: 6px 0; }
-  .price-banner .sub { font-size: 13px; color: var(--dim); }
-  .price-banner .rp { font-size: 18px; font-weight: 700; color: var(--green); margin-top: 4px; }
-
-  .range-btns {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-  }
-  .range-btns button {
-    flex: 1;
-    min-width: 60px;
-    padding: 10px 8px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--input-bg);
-    color: var(--dim);
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all .2s;
-  }
-  .range-btns button.active {
-    border-color: var(--accent);
-    background: rgba(240,185,11,.12);
-    color: var(--accent);
-  }
-  .range-btns button:hover { border-color: var(--accent); }
-
-  .chart-box {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px;
-    margin-bottom: 16px;
-    position: relative;
-  }
-  .chart-box canvas { width: 100% !important; height: 350px !important; }
-  .chart-loading {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    color: var(--dim);
-    font-size: 14px;
-  }
-
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-  @media (max-width: 600px) {
-    .stats-grid { grid-template-columns: repeat(2, 1fr); }
-    .chart-box canvas { height: 250px !important; }
-    .price-banner .price { font-size: 24px; }
-  }
-  .stat-card {
-    background: var(--input-bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px;
-    text-align: center;
-  }
-  .stat-card .stat-label { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: .5px; }
-  .stat-card .stat-value { font-size: 16px; font-weight: 700; margin-top: 4px; }
-
-  .brand-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-  @media (max-width: 600px) { .brand-row { grid-template-columns: 1fr; } }
-  .brand-mini {
-    background: var(--input-bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px;
-    text-align: center;
-  }
-  .brand-mini .bm-label { font-size: 10px; color: var(--dim); text-transform: uppercase; }
-  .brand-mini .bm-price { font-size: 16px; font-weight: 700; margin: 4px 0; }
-  .brand-mini .bm-sub { font-size: 10px; color: var(--dim); }
-  .bm-antam .bm-price { color: #e74c3c; }
-  .bm-peg .bm-price { color: #1a9c54; }
-  .bm-ubs .bm-price { color: #3498db; }
-
-  .footer { text-align: center; padding: 20px; font-size: 11px; color: var(--dim); line-height: 1.9; }
-  .footer a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
-  .footer a:hover { border-bottom-color: var(--accent); }
-</style>
+<title>GOLD CHART: Harga Emas Historis (USD &amp; IDR)</title>
+<meta name="description" content="Grafik harga emas historis dalam USD per troy oz dan Rupiah per gram, dengan statistik tertinggi, terendah, rata-rata, dan selisih per periode.">
+<meta name="theme-color" content="#0f1117">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23f0b90b'/%3E%3Ctext x='32' y='43' font-size='26' font-weight='800' text-anchor='middle' fill='%23141000' font-family='sans-serif'%3EAu%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"
+        integrity="sha384-vsrfeLOOY6KuIYKDlmVH5UiBmgIdB1oEf7p01YgWHuqmOHfZr374+odEv96n9tNC"
+        crossorigin="anonymous"></script>
 </head>
 <body>
 
-<div class="header">
-  <h1>GOLD CHART</h1>
-  <a href="index.html">← Kembali ke Kalkulator</a>
-</div>
+<header class="header">
+  <a class="brand" href="index.html" aria-label="GOLD CALC, kembali ke kalkulator">
+    <svg class="medallion" width="36" height="36" viewBox="0 0 64 64" role="img" aria-label="Medali emas Au">
+      <circle cx="32" cy="32" r="30" fill="#f0b90b" stroke="#8a6a06" stroke-width="2"/>
+      <text x="32" y="41" font-size="22" font-weight="800" text-anchor="middle" fill="#1a1200" font-family="ui-sans-serif, system-ui, sans-serif">Au</text>
+    </svg>
+    <span class="brand-name">GOLD CHART<small>HARGA EMAS HISTORIS</small></span>
+  </a>
+  <div class="header-right">
+    <a class="chart-link" href="index.html">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+      Kalkulator
+    </a>
+  </div>
+</header>
 
-<div class="container">
-  <!-- Current Price -->
-  <div class="price-banner">
-    <div class="label">Harga Emas Saat Ini</div>
-    <div class="price" id="livePrice">Loading...</div>
-    <div class="sub" id="liveChange">-</div>
-    <div class="rp" id="liveRp">-</div>
+<main class="container" style="max-width:1000px;">
+
+  <section class="live-banner" aria-labelledby="chartLiveTitle" style="margin-bottom:var(--space-4);">
+    <div>
+      <p class="field-label" id="chartLiveTitle">Harga Emas Saat Ini</p>
+      <div class="live-price-row">
+        <span class="live-price-usd" id="livePrice" style="font-size:30px;">Memuat…</span>
+        <span class="live-change up" id="liveChange" hidden></span>
+      </div>
+    </div>
+    <div class="live-right">
+      <p class="field-label">Setara (IDR)</p>
+      <div class="live-rp" id="liveRp">—</div>
+      <div class="live-sub">Rupiah per gram</div>
+      <div class="live-updated" id="spotSource">Spot: xaus.com</div>
+    </div>
+  </section>
+
+  <section class="brand-1gram brand-row" aria-label="Harga merek 1 gram">
+    <div class="gram1-card g1-antam brand-tile">
+      <div class="gram1-top"><span class="g1-brand">Antam 1g</span><span class="tag tag-antam">Antam</span></div>
+      <div class="g1-price g1-price-sm" id="bAntam">—</div>
+    </div>
+    <div class="gram1-card g1-peg brand-tile">
+      <div class="gram1-top"><span class="g1-brand">Pegadaian 1g</span><span class="tag tag-pegadaian">Pegadaian</span></div>
+      <div class="g1-price g1-price-sm" id="bPeg">—</div>
+    </div>
+    <div class="gram1-card g1-ubs brand-tile">
+      <div class="gram1-top"><span class="g1-brand">UBS 1g</span><span class="tag tag-ubs">UBS</span></div>
+      <div class="g1-price g1-price-sm" id="bUbs">—</div>
+      <div class="g1-note"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" style="width:12px;height:12px;"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M12 11v5"/></svg>Estimasi: Antam × 1,018</div>
+    </div>
+  </section>
+  <p class="hint brand-status" id="brandFreshness"></p>
+
+  <div class="scenario-btns range-group" role="group" aria-label="Rentang waktu" id="rangeGroup">
+    <button type="button" data-range="1W">1 Minggu</button>
+    <button type="button" data-range="1M" class="active-scenario">1 Bulan</button>
+    <button type="button" data-range="1Y">1 Tahun</button>
+    <button type="button" data-range="5Y">5 Tahun</button>
+    <button type="button" data-range="ALL">Semua</button>
   </div>
 
-  <!-- Brand 1g -->
-  <div class="brand-row" id="brandRow">
-    <div class="brand-mini bm-antam">
-      <div class="bm-label">Antam 1g</div>
-      <div class="bm-price" id="bAntam">-</div>
+  <div class="panel chart-panel">
+    <p class="chart-loading" id="chartLoading">Memuat data…</p>
+    <canvas id="goldChart" class="chart-canvas" role="img" aria-label="Grafik garis harga emas historis dalam USD per troy oz dan Rupiah per gram"></canvas>
+  </div>
+
+  <div class="stat-strip stat-strip-4" aria-label="Statistik periode">
+    <div class="stat-cell">
+      <p class="field-label">Tertinggi</p>
+      <div class="stat-value gold-text stat-value-sm" id="statHigh">—</div>
     </div>
-    <div class="brand-mini bm-peg">
-      <div class="bm-label">Pegadaian 1g</div>
-      <div class="bm-price" id="bPeg">-</div>
+    <div class="stat-cell">
+      <p class="field-label">Terendah</p>
+      <div class="stat-value stat-value-sm" id="statLow" style="color:var(--red);">—</div>
     </div>
-    <div class="brand-mini bm-ubs">
-      <div class="bm-label">UBS 1g</div>
-      <div class="bm-price" id="bUbs">-</div>
+    <div class="stat-cell">
+      <p class="field-label">Rata-rata</p>
+      <div class="stat-value stat-value-sm" id="statAvg">—</div>
+    </div>
+    <div class="stat-cell">
+      <p class="field-label">Selisih</p>
+      <div class="stat-value stat-value-sm" id="statDiff">—</div>
     </div>
   </div>
 
-  <!-- Range Buttons -->
-  <div class="range-btns">
-    <button onclick="setRange('1W')" id="btn1W">1 Minggu</button>
-    <button onclick="setRange('1M')" id="btn1M" class="active">1 Bulan</button>
-    <button onclick="setRange('1Y')" id="btn1Y">1 Tahun</button>
-    <button onclick="setRange('5Y')" id="btn5Y">5 Tahun</button>
-    <button onclick="setRange('ALL')" id="btnALL">Semua</button>
-  </div>
+  <footer class="footer-info">
+    Sumber data:
+    <a href="https://xaus.com/" target="_blank" rel="noopener">Harga historis &amp; spot (xaus.com)</a> ·
+    <a href="https://freegoldapi.com/" target="_blank" rel="noopener">Cadangan historis (Free Gold API)</a> ·
+    <a href="https://mintedmetal.com/" target="_blank" rel="noopener">Cadangan spot (mintedmetal)</a> ·
+    <a href="https://www.frankfurter.dev/" target="_blank" rel="noopener">Kurs USD/IDR (Frankfurter, ECB)</a> ·
+    <a href="https://hargaemas.com/" target="_blank" rel="noopener">Antam / Pegadaian (hargaemas)</a>
+    <br>1 troy oz = 31,1035 gram · Harga informatif, bukan rekomendasi investasi.
+  </footer>
+</main>
 
-  <!-- Chart -->
-  <div class="chart-box">
-    <div class="chart-loading" id="chartLoading">Memuat data...</div>
-    <canvas id="goldChart"></canvas>
-  </div>
-
-  <!-- Stats -->
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-label">Tertinggi</div>
-      <div class="stat-value up" id="statHigh">-</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Terendah</div>
-      <div class="stat-value down" id="statLow">-</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Rata-rata</div>
-      <div class="stat-value" id="statAvg" style="color:var(--accent)">-</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Selisih</div>
-      <div class="stat-value" id="statDiff">-</div>
-    </div>
-  </div>
-</div>
-
-<div class="footer">
-  Sumber data:
-  <a href="https://xaus.com/" target="_blank" rel="noopener">Harga emas historis &amp; live (xaus.com)</a> ·
-  <a href="https://freegoldapi.com/" target="_blank" rel="noopener">Cadangan historis (Free Gold API)</a> ·
-  <a href="https://mintedmetal.com/" target="_blank" rel="noopener">Cadangan spot (mintedmetal)</a> ·
-  <a href="https://www.frankfurter.app/" target="_blank" rel="noopener">Kurs USD/IDR (Frankfurter, ECB)</a> ·
-  <a href="https://hargaemas.com/" target="_blank" rel="noopener">Antam / Pegadaian (hargaemas)</a>
-  <br>1 troy oz = 31.1035 gram
-</div>
-
+<script src="js/gold-common.js"></script>
 <script>
-const OZ_TO_GRAM = 31.1035;
+'use strict';
+const { OZ_TO_GRAM, fetchJSON, formatRp, formatUsd, loadBrandPrices, fetchUsdIdrRate } = window.GoldCommon;
+
 let allData = [];
-let usdIdrRate = 16250;
+let usdIdrRate = null;
 let chart = null;
 let currentRange = '1M';
-let liveGoldPrice = 0;
+const $ = (id) => document.getElementById(id);
+const goldChartCanvas = $('goldChart');
 
-const fmtRp = (n) => 'Rp ' + Math.round(n).toLocaleString('id-ID');
-const fmtUsd = (n) => '$' + n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
-
-// Fetch USD/IDR
 async function fetchRate() {
-  try {
-    const r = await fetch('https://api.frankfurter.dev/v1/latest?base=USD&symbols=IDR');
-    const d = await r.json();
-    usdIdrRate = d.rates.IDR;
-  } catch(e) {}
+  try { usdIdrRate = await fetchUsdIdrRate(); } catch (e) { /* kurs manual di halaman kalkulator */ }
 }
 
-// Fetch historical gold data (5 tahun, update harian sampai hari ini)
 async function fetchGoldHistory() {
   try {
-    const r = await fetch('https://xaus.com/api/v1/history?symbol=XAUUSD&interval=daily');
-    const d = await r.json();
+    const d = await fetchJSON('https://xaus.com/api/v1/history?symbol=XAUUSD&interval=daily');
     if (!d.points || !d.points.length) throw new Error('No data');
-    allData = d.points.map(p => ({ date: p.d, price: p.c, source: 'xaus' }));
-    allData.sort((a,b) => a.date.localeCompare(b.date));
-  } catch(e) {
-    // Fallback ke sumber lama jika xaus gagal
+    allData = d.points.map(p => ({ date: p.d, price: p.c }));
+    allData.sort((a, b) => a.date.localeCompare(b.date));
+  } catch (e) {
     try {
-      const r = await fetch('https://freegoldapi.com/data/latest.json');
-      allData = await r.json();
-      allData = allData.filter(d => d.date >= '2020-01-01' && d.source.includes('yahoo'));
-      allData.sort((a,b) => a.date.localeCompare(b.date));
-    } catch(e2) {
-      document.getElementById('chartLoading').textContent = 'Gagal memuat data';
+      const d = await fetchJSON('https://freegoldapi.com/data/latest.json');
+      allData = d.filter(x => x.date >= '2020-01-01' && x.source.includes('yahoo'));
+      allData.sort((a, b) => a.date.localeCompare(b.date));
+    } catch (e2) {
+      $('chartLoading').textContent = 'Gagal memuat data historis';
     }
   }
 }
 
-// Fetch current price (spot live, data hari ini)
 async function fetchCurrent() {
-  try {
-    const r = await fetch('https://xaus.com/api/v1/spot');
-    const d = await r.json();
-    liveGoldPrice = d.spot_usd_oz;
-    const today = new Date().toISOString().split('T')[0];
-
-    const prev = [...allData].reverse().find(p => p.date < today);
-    const prevPrice = prev ? prev.price : liveGoldPrice;
-    const change = liveGoldPrice - prevPrice;
-    const pct = prevPrice ? ((change/prevPrice)*100).toFixed(2) : '0.00';
-    const isUp = change >= 0;
-
-    document.getElementById('livePrice').textContent = fmtUsd(liveGoldPrice);
-    document.getElementById('liveChange').textContent = (isUp?'+':'') + change.toFixed(2) + ' (' + (isUp?'+':'') + pct + '%)';
-    document.getElementById('liveChange').style.color = isUp ? 'var(--green)' : 'var(--red)';
-    document.getElementById('liveRp').textContent = fmtRp((liveGoldPrice / OZ_TO_GRAM) * usdIdrRate) + ' /gram';
-
-    const existing = allData.find(p => p.date === today);
-    if (existing) existing.price = liveGoldPrice;
-    else allData.push({ date: today, price: liveGoldPrice, source: 'live' });
-  } catch(e) {
-    // Fallback ke mintedmetal jika xaus gagal
-    try {
-      const r = await fetch('https://mintedmetal.com/api/prices.json');
-      const d = await r.json();
-      liveGoldPrice = d.metals.gold.price;
-      const prevDay = d.metals.gold.previousPrice;
-      const change = liveGoldPrice - prevDay;
-      const pct = ((change/prevDay)*100).toFixed(2);
+  const render = (price, prevPrice, sourceLabel) => {
+    $('livePrice').textContent = formatUsd(price);
+    const changeEl = $('liveChange');
+    if (prevPrice && prevPrice > 0) {
+      const change = price - prevPrice;
+      const pct = (change / prevPrice) * 100;
       const isUp = change >= 0;
-      document.getElementById('livePrice').textContent = fmtUsd(liveGoldPrice);
-      document.getElementById('liveChange').textContent = (isUp?'+':'') + change.toFixed(2) + ' (' + (isUp?'+':'') + pct + '%)';
-      document.getElementById('liveChange').style.color = isUp ? 'var(--green)' : 'var(--red)';
-      document.getElementById('liveRp').textContent = fmtRp((liveGoldPrice / OZ_TO_GRAM) * usdIdrRate) + ' /gram';
-      document.getElementById('chartLoading').textContent = 'Data sementara (mintedmetal.com)';
-    } catch(e2) {
-      document.getElementById('livePrice').textContent = 'Gagal load';
+      changeEl.hidden = false;
+      changeEl.textContent = (isUp ? '+' : '') + change.toFixed(2) + ' (' + (isUp ? '+' : '') + pct.toFixed(2) + '%)';
+      changeEl.className = 'live-change ' + (isUp ? 'up' : 'down');
+    } else {
+      changeEl.hidden = true;
+    }
+    $('liveRp').textContent = usdIdrRate ? formatRp((price / OZ_TO_GRAM) * usdIdrRate) : 'Kurs tidak tersedia';
+    $('spotSource').textContent = 'Spot: ' + sourceLabel;
+  };
+
+  const today = new Date().toISOString().split('T')[0];
+  const prev = [...allData].reverse().find(p => p.date < today);
+  const prevPrice = prev ? prev.price : null;
+
+  try {
+    const d = await fetchJSON('https://xaus.com/api/v1/spot');
+    const price = d.spot_usd_oz;
+    render(price, prevPrice, 'xaus.com');
+    const existing = allData.find(p => p.date === today);
+    if (existing) existing.price = price; else allData.push({ date: today, price });
+  } catch (e) {
+    try {
+      const d = await fetchJSON('https://mintedmetal.com/api/prices.json');
+      render(d.metals.gold.price, d.metals.gold.previousPrice, 'mintedmetal.com (cadangan)');
+    } catch (e2) {
+      $('livePrice').textContent = 'Gagal memuat';
     }
   }
-}
-
-// Fetch brand prices (JSON harian, fallback proxy kalau kosong/basi)
-const BRAND_MAX_AGE_MS = 3 * 24 * 3600 * 1000;
-
-function parseHargaEmas(html) {
-  const prices = [];
-  const regex = /<tr class="col-antam"><td>([\s\S]*?)<\/td>\s*<td[^>]*>([\s\S]*?)<\/td>\s*<td[^>]*>([\s\S]*?)<\/td><\/tr>/g;
-  let m;
-  while ((m = regex.exec(html)) !== null) {
-    const gram = m[1].replace(/<[^>]*>/g, '').trim();
-    const antam = parseInt(m[2].replace(/<[^>]*>/g, '').replace(/[^0-9]/g, ''), 10) || 0;
-    const peg = parseInt(m[3].replace(/<[^>]*>/g, '').replace(/[^0-9]/g, ''), 10) || 0;
-    if (gram && antam > 0) prices.push({ gram, antam, pegadaian: peg });
-  }
-  return prices;
 }
 
 async function fetchBrands() {
-  let g1 = null;
+  const freshEl = $('brandFreshness');
   try {
-    const r = await fetch('./data/gold-indonesia.json', { cache: 'no-store' });
-    const d = await r.json();
-    const fetched = d.fetchedAt ? Date.parse(d.fetchedAt) : 0;
-    const fresh = !!fetched && (Date.now() - fetched) < BRAND_MAX_AGE_MS;
-    const one = (d.prices || []).find(p => p.gram === '1' || p.gram === '1.00');
-    if (one && one.antam && fresh) g1 = one;
-  } catch (e) {}
-  if (!g1) {
-    try {
-      const p = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://hargaemas.com/');
-      const r = await fetch(p, { cache: 'no-store' });
-      const one = parseHargaEmas(await r.text()).find(x => x.gram === '1' || x.gram === '1.00');
-      if (one && one.antam) g1 = one;
-    } catch (e) {}
-  }
-  if (g1) {
-    document.getElementById('bAntam').textContent = fmtRp(g1.antam);
-    document.getElementById('bPeg').textContent = fmtRp(g1.pegadaian);
-    const ubs = Math.round(g1.antam * 1.018 / 1000) * 1000;
-    document.getElementById('bUbs').textContent = fmtRp(ubs);
+    const data = await loadBrandPrices();
+    $('bAntam').textContent = formatRp(data.oneGram.antam);
+    $('bPeg').textContent = data.oneGram.pegadaian ? formatRp(data.oneGram.pegadaian) : '—';
+    $('bUbs').textContent = formatRp(Math.round(data.oneGram.antam * 1.018 / 1000) * 1000);
+    freshEl.textContent = data.fresh
+      ? 'Harga merek: ' + (data.ts || 'terbaru') + ' · sumber: ' + data.source
+      : 'Harga merek BASI: ' + (data.ts || '?') + ' · gagal diperbarui, menampilkan data terakhir';
+    freshEl.classList.toggle('brand-status-warn', !data.fresh);
+  } catch (e) {
+    freshEl.textContent = 'Harga merek tidak tersedia: coba muat ulang halaman';
+    freshEl.classList.add('brand-status-warn');
   }
 }
 
 function filterData(range) {
-  const now = new Date();
+  const now = Date.now();
   let from;
-  switch(range) {
-    case '1W': from = new Date(now - 7*86400000); break;
-    case '1M': from = new Date(now - 30*86400000); break;
-    case '1Y': from = new Date(now - 365*86400000); break;
-    case '5Y': from = new Date(now - 5*365*86400000); break;
-    case 'ALL': from = new Date('2000-01-01'); break;
+  switch (range) {
+    case '1W': from = now - 7 * 86400000; break;
+    case '1M': from = now - 30 * 86400000; break;
+    case '1Y': from = now - 365 * 86400000; break;
+    case '5Y': from = now - 5 * 365 * 86400000; break;
+    default: from = 0;
   }
-  return allData.filter(d => new Date(d.date) >= from);
+  return allData.filter(d => new Date(d.date).getTime() >= from);
 }
 
 function getStats(data) {
-  if (!data.length) return {};
+  if (!data.length) return null;
   const prices = data.map(d => d.price);
   return {
-    high: Math.max(...prices),
-    low: Math.min(...prices),
-    avg: prices.reduce((a,b)=>a+b,0)/prices.length,
-    diff: prices[prices.length-1] - prices[0]
+    high: Math.max.apply(null, prices),
+    low: Math.min.apply(null, prices),
+    avg: prices.reduce((a, b) => a + b, 0) / prices.length,
+    diff: prices[prices.length - 1] - prices[0]
   };
 }
 
 function drawChart(range) {
   const data = filterData(range);
-  const loading = document.getElementById('chartLoading');
-  if (!data.length) { loading.textContent = 'Tidak ada data'; return; }
+  const loading = $('chartLoading');
+  if (!data.length) { loading.textContent = 'Tidak ada data untuk rentang ini'; loading.style.display = 'block'; return; }
   loading.style.display = 'none';
 
   const stats = getStats(data);
-  document.getElementById('statHigh').textContent = fmtUsd(stats.high);
-  document.getElementById('statLow').textContent = fmtUsd(stats.low);
-  document.getElementById('statAvg').textContent = fmtUsd(stats.avg);
-  const diffEl = document.getElementById('statDiff');
-  diffEl.textContent = (stats.diff>=0?'+':'') + fmtUsd(stats.diff);
+  $('statHigh').textContent = formatUsd(stats.high);
+  $('statLow').textContent = formatUsd(stats.low);
+  $('statAvg').textContent = formatUsd(stats.avg);
+  const diffEl = $('statDiff');
+  diffEl.textContent = (stats.diff >= 0 ? '+' : '-') + formatUsd(Math.abs(stats.diff));
   diffEl.style.color = stats.diff >= 0 ? 'var(--green)' : 'var(--red)';
 
   const labels = data.map(d => d.date);
   const pricesUSD = data.map(d => d.price);
-  const pricesIDR = data.map(d => (d.price / OZ_TO_GRAM) * usdIdrRate);
+  const pricesIDR = usdIdrRate ? data.map(d => (d.price / OZ_TO_GRAM) * usdIdrRate) : null;
 
   if (chart) chart.destroy();
 
-  const ctx = document.getElementById('goldChart').getContext('2d');
-  chart = new Chart(ctx, {
+  chart = new Chart(goldChartCanvas.getContext('2d'), {
     type: 'line',
     data: {
       labels,
@@ -409,7 +257,7 @@ function drawChart(range) {
           borderWidth: 2,
           yAxisID: 'y'
         },
-        {
+        ...(pricesIDR ? [{
           label: 'Rp/gram',
           data: pricesIDR,
           borderColor: '#2ecc71',
@@ -420,7 +268,7 @@ function drawChart(range) {
           pointHoverRadius: 5,
           borderWidth: 2,
           yAxisID: 'y1'
-        }
+        }] : [])
       ]
     },
     options: {
@@ -428,52 +276,56 @@ function drawChart(range) {
       maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { labels: { color: '#8a8d98', font: { size: 12 } } },
+        legend: { labels: { color: '#9ba0ae', font: { size: 12 } } },
         tooltip: {
           backgroundColor: '#1a1d29',
-          titleColor: '#e1e4ea',
-          bodyColor: '#e1e4ea',
-          borderColor: '#2a2d3a',
+          titleColor: '#f2f3f7',
+          bodyColor: '#f2f3f7',
+          borderColor: '#3a3e4f',
           borderWidth: 1,
           callbacks: {
-            label: (ctx) => {
-              if (ctx.datasetIndex === 0) return 'USD: ' + fmtUsd(ctx.parsed.y);
-              return 'Rp: ' + fmtRp(ctx.parsed.y);
-            }
+            label: (ctx) => ctx.datasetIndex === 0
+              ? 'USD: ' + formatUsd(ctx.parsed.y)
+              : 'Rp: ' + formatRp(ctx.parsed.y)
           }
         }
       },
       scales: {
         x: {
-          ticks: { color: '#8a8d98', maxTicksLimit: 8, font: { size: 11 } },
-          grid: { color: '#2a2d3a33' }
+          ticks: { color: '#9ba0ae', maxTicksLimit: 8, font: { size: 11 } },
+          grid: { color: 'rgba(58,62,79,.35)' }
         },
         y: {
           position: 'left',
           ticks: { color: '#f0b90b', font: { size: 11 }, callback: v => '$' + v.toLocaleString() },
-          grid: { color: '#2a2d3a33' }
+          grid: { color: 'rgba(58,62,79,.35)' }
         },
-        y1: {
-          position: 'right',
-          ticks: { color: '#2ecc71', font: { size: 11 }, callback: v => 'Rp' + (v/1000000).toFixed(1) + 'jt' },
-          grid: { drawOnChartArea: false }
-        }
+        ...(pricesIDR ? {
+          y1: {
+            position: 'right',
+            ticks: { color: '#2ecc71', font: { size: 11 }, callback: v => 'Rp ' + (v / 1e6).toFixed(2).replace('.', ',') + ' jt' },
+            grid: { drawOnChartArea: false }
+          }
+        } : {})
       }
     }
   });
 }
 
-function setRange(r) {
-  currentRange = r;
-  document.querySelectorAll('.range-btns button').forEach(b => b.classList.remove('active'));
-  document.getElementById('btn' + r).classList.add('active');
-  drawChart(r);
-}
+$('rangeGroup').addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-range]');
+  if (!btn) return;
+  currentRange = btn.dataset.range;
+  $('rangeGroup').querySelectorAll('button').forEach(b => b.classList.toggle('active-scenario', b === btn));
+  drawChart(currentRange);
+});
 
-// Init
 (async () => {
-  document.getElementById('chartLoading').textContent = 'Memuat data...';
-  await Promise.all([fetchRate(), fetchGoldHistory(), fetchCurrent(), fetchBrands()]);
+  $('chartLoading').textContent = 'Memuat data…';
+  $('chartLoading').style.display = 'block';
+  // fetchCurrent bergantung pada allData (prev close) — urutan tidak boleh paralel
+  await fetchGoldHistory();
+  await Promise.all([fetchRate(), fetchCurrent(), fetchBrands()]);
   drawChart(currentRange);
 })();
 </script>

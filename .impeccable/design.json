@@ -1,0 +1,312 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-04T00:00:00Z",
+  "title": "Design System: GOLD CALC",
+  "extensions": {
+    "colorMeta": {
+      "ground": {
+        "role": "neutral",
+        "displayName": "Ledger Ground",
+        "canonical": "#0f1117",
+        "tonalRamp": [
+          "#e9ebf1",
+          "#d1d5e1",
+          "#b2b9cd",
+          "#939cb9",
+          "#7480a4",
+          "#5b678b",
+          "#46506c",
+          "#32394d"
+        ]
+      },
+      "panel": {
+        "role": "neutral",
+        "displayName": "Ledger Panel",
+        "canonical": "#1a1d29",
+        "tonalRamp": [
+          "#e9ebf1",
+          "#d0d4e1",
+          "#b1b7ce",
+          "#929aba",
+          "#737da6",
+          "#59638c",
+          "#454d6d",
+          "#31374e"
+        ]
+      },
+      "well": {
+        "role": "neutral",
+        "displayName": "Well",
+        "canonical": "#252836",
+        "tonalRamp": [
+          "#eaebf0",
+          "#d2d4e0",
+          "#b3b8cb",
+          "#959bb6",
+          "#777ea2",
+          "#5d6588",
+          "#494e6a",
+          "#34384c"
+        ]
+      },
+      "gold-signal": {
+        "role": "primary",
+        "displayName": "Stamp Gold",
+        "canonical": "#f0b90b",
+        "tonalRamp": [
+          "#fdf6dd",
+          "#fcebb6",
+          "#f9dd85",
+          "#f7d054",
+          "#f5c324",
+          "#dba90a",
+          "#ab8408",
+          "#7a5e06"
+        ]
+      },
+      "harga-hijau": {
+        "role": "secondary",
+        "displayName": "Naik Hijau",
+        "canonical": "#2ecc71",
+        "tonalRamp": [
+          "#e2f8eb",
+          "#c1f1d5",
+          "#97e8b9",
+          "#6dde9d",
+          "#44d581",
+          "#2abb68",
+          "#219251",
+          "#17683a"
+        ]
+      },
+      "loss-red": {
+        "role": "secondary",
+        "displayName": "Turun Merah",
+        "canonical": "#ff7a6b",
+        "tonalRamp": [
+          "#ffe8e5",
+          "#ffd1cc",
+          "#ffa399",
+          "#ff7666",
+          "#ff4833",
+          "#ff1a00",
+          "#cc1500",
+          "#991000"
+        ]
+      },
+      "antam-red": {
+        "role": "tertiary",
+        "displayName": "Antam Red",
+        "canonical": "#ff6f5e",
+        "tonalRamp": [
+          "#ffe8e5",
+          "#ffd1cc",
+          "#ffa499",
+          "#ff7666",
+          "#ff4933",
+          "#ff1b00",
+          "#cc1600",
+          "#991000"
+        ]
+      },
+      "ubs-blue": {
+        "role": "tertiary",
+        "displayName": "UBS Blue",
+        "canonical": "#5aa9ff",
+        "tonalRamp": [
+          "#e5f2ff",
+          "#cce4ff",
+          "#99caff",
+          "#66afff",
+          "#3395ff",
+          "#007aff",
+          "#0062cc",
+          "#004999"
+        ]
+      },
+      "text": {
+        "role": "neutral",
+        "displayName": "Ash Text",
+        "canonical": "#f2f3f7",
+        "tonalRamp": [
+          "#eff0f5",
+          "#dfe2ec",
+          "#c0c5d8",
+          "#a0a8c5",
+          "#818ab1",
+          "#616d9e",
+          "#4e577e",
+          "#3a425f"
+        ]
+      },
+      "dim": {
+        "role": "neutral",
+        "displayName": "Dim Ash",
+        "canonical": "#9ba0ae",
+        "tonalRamp": [
+          "#f1f2f4",
+          "#e3e4e8",
+          "#c7c9d1",
+          "#aaafbb",
+          "#8e94a4",
+          "#72798d",
+          "#5b6171",
+          "#444955"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Harga spot & Rp/gram — angka terbesar di layar, tabular-nums."
+      },
+      "title": {
+        "displayName": "Title (Section Label)",
+        "purpose": "Section headings & panel titles; uppercase 12px, weight 700, tracking 0.12em."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Isi tabel, input, label tombol; weight 600, tabular-nums."
+      }
+    },
+    "shadows": [
+      {
+        "name": "banner-ambient",
+        "value": "0 12px 36px rgba(0,0,0,0.4)",
+        "purpose": "Satu-satunya elemen mengambang yang disahkan: banner harga live."
+      },
+      {
+        "name": "card-hover",
+        "value": "0 10px 28px rgba(0,0,0,0.35)",
+        "purpose": "Feedback hover kartu merek bersama translateY(-2px)."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-standard",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Transisi state (hover, warna, fokus) — 150–180ms."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "600px"
+      },
+      {
+        "name": "md",
+        "value": "880px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Aksi utama; satu per layar (mis. Ryker Gold Plan).",
+      "html": "<button class=\"ds-btn-primary\">Ryker Gold Plan</button>",
+      "css": ".ds-btn-primary { background: #f0b90b; color: #141000; border: none; border-radius: 6px; min-height: 46px; padding: 12px 18px; font: 700 14px/1.2 system-ui, sans-serif; cursor: pointer; transition: filter .15s ease; } .ds-btn-primary:hover { filter: brightness(1.08); } .ds-btn-primary:focus-visible { outline: 2px solid #f0b90b; outline-offset: 2px; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Aksi sekunder pelengkap (Reset, utilitas).",
+      "html": "<button class=\"ds-btn-ghost\">Reset</button>",
+      "css": ".ds-btn-ghost { background: #252836; color: #9ba0ae; border: 1px solid #2e3140; border-radius: 6px; min-height: 44px; padding: 10px 16px; font: 600 12px/1.2 system-ui, sans-serif; cursor: pointer; transition: color .15s ease; } .ds-btn-ghost:hover { color: #f2f3f7; } .ds-btn-ghost:focus-visible { outline: 2px solid #f0b90b; outline-offset: 2px; }"
+    },
+    {
+      "name": "Quick Price Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Preset harga cepat; 'Harga Live' memakai varian aksen tinted.",
+      "html": "<button class=\"ds-chip\">Harga Live</button><button class=\"ds-chip\">3350</button>",
+      "css": ".ds-chip { background: #252836; color: #9ba0ae; border: 1px solid #2e3140; border-radius: 6px; min-height: 44px; padding: 8px 14px; font: 600 12px/1.2 system-ui, sans-serif; font-variant-numeric: tabular-nums; cursor: pointer; transition: all .15s ease; } .ds-chip:hover { border-color: #f0b90b; color: #f0b90b; } .ds-chip:focus-visible { outline: 2px solid #f0b90b; outline-offset: 2px; }"
+    },
+    {
+      "name": "Ledger Panel",
+      "kind": "card",
+      "refersTo": "panel-card",
+      "description": "Wadah utama: input kiri & hasil kanan di grid utama.",
+      "html": "<section class=\"ds-panel\"><h2 class=\"ds-panel-title\">Harga Emas (USD/oz)</h2><p class=\"ds-panel-body\">Konten panel</p></section>",
+      "css": ".ds-panel { background: #1a1d29; color: #f2f3f7; border: 1px solid #2e3140; border-radius: 12px; padding: 20px; } .ds-panel-title { font: 700 12px/1.4 system-ui, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #f0b90b; border-bottom: 1px solid #2e3140; padding-bottom: 12px; margin-bottom: 16px; } .ds-panel-body { font: 600 14px/1.5 system-ui, sans-serif; font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Ledger Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Input numerik; focus border gold, placeholder dim.",
+      "html": "<label class=\"ds-label\" for=\"ds-in\">Masukkan harga emas</label><input id=\"ds-in\" class=\"ds-input\" type=\"number\" placeholder=\"3350.00\">",
+      "css": ".ds-label { display:block; font: 600 11px/1.4 system-ui, sans-serif; letter-spacing: .05em; text-transform: uppercase; color: #9ba0ae; margin-bottom: 6px; } .ds-input { width: 100%; min-height: 46px; padding: 10px 12px; background: #252836; color: #f2f3f7; border: 1px solid #2e3140; border-radius: 6px; font: 600 15px/1.2 system-ui, sans-serif; font-variant-numeric: tabular-nums; outline: none; } .ds-input::placeholder { color: #9ba0ae; font-weight: 400; } .ds-input:focus { border-color: #f0b90b; } .ds-input:focus-visible { outline: 2px solid #f0b90b; outline-offset: 2px; }"
+    },
+    {
+      "name": "Mode Toggle",
+      "kind": "nav",
+      "refersTo": "mode-toggle-active",
+      "description": "Sederhana / Trader; aktif = gold solid.",
+      "html": "<div class=\"ds-toggle\" role=\"group\" aria-label=\"Mode kalkulator\"><button class=\"ds-toggle-btn ds-toggle-on\">Sederhana</button><button class=\"ds-toggle-btn\">Trader</button></div>",
+      "css": ".ds-toggle { display:flex; gap:3px; background:#252836; border:1px solid #2e3140; border-radius:6px; padding:3px; } .ds-toggle-btn { min-height:44px; padding:10px 18px; border:none; background:transparent; color:#9ba0ae; font:600 13px/1 system-ui,sans-serif; border-radius:4px; cursor:pointer; } .ds-toggle-on { background:#f0b90b; color:#141000; } .ds-toggle-btn:focus-visible { outline: 2px solid #f0b90b; outline-offset: 2px; }"
+    },
+    {
+      "name": "Brand Card (Antam 1g)",
+      "kind": "card",
+      "refersTo": "panel-card",
+      "description": "Kartu merek logam 1 gram; UBS selalu dengan baris estimasi.",
+      "html": "<div class=\"ds-brand\"><div class=\"ds-brand-top\"><span>Antam 1 gram</span><span class=\"ds-tag\">Antam</span></div><div class=\"ds-brand-price\">Rp 2.561.000</div><div class=\"ds-brand-diff\">+Rp 144.240 vs spot</div></div>",
+      "css": ".ds-brand { background:#252836; border:1px solid #2e3140; border-radius:10px; padding:16px; transition: transform .18s ease, box-shadow .18s ease; } .ds-brand:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(0,0,0,.35); } .ds-brand-top { display:flex; justify-content:space-between; align-items:center; font:700 11px/1 system-ui,sans-serif; letter-spacing:.08em; text-transform:uppercase; color:#9ba0ae; margin-bottom:8px; } .ds-tag { font-size:11px; font-weight:800; letter-spacing:.1em; padding:2px 7px; border-radius:3px; border:1px solid rgba(255,111,94,.35); color:#ff6f5e; background:rgba(255,111,94,.08); } .ds-brand-price { font:800 22px/1.1 system-ui,sans-serif; font-variant-numeric:tabular-nums; color:#ff6f5e; } .ds-brand-diff { font-size:12px; color:#9ba0ae; margin-top:2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Ledger Terminal",
+    "overview": "GOLD CALC adalah buku besar emas yang berjalan di dalam terminal: permukaan gelap nyaris hitam, angka tabular besar, aksen emas dipakai seperti tinta stempel — jarang dan presisi. Setiap elemen ada untuk membawa harga, konversi, atau keputusan trade dalam beberapa detik.",
+    "keyCharacteristics": [
+      "Dark ground (#0f1117) dengan tiga tingkat permukaan: ground, panel, well",
+      "Gold (#f0b90b) = satu-satunya aksen; hanya untuk harga, aksi utama, wordmark, status live",
+      "tabular-nums di semua angka; system-ui sebagai satu-satunya keluarga",
+      "Label uppercase 12px letterspaced untuk section, bukan hiasan",
+      "Status selalu berlabel: live (hijau), basi/gagal (merah), estimasi (biru)"
+    ],
+    "rules": [
+      {
+        "name": "The One Voice Rule",
+        "body": "Gold muncul di ≤10% area render mana pun: harga live, Rp/gram, tombol primer, toggle aktif, wordmark. Sisanya adalah buku besar netral.",
+        "section": "colors"
+      },
+      {
+        "name": "The Signal Rule",
+        "body": "Hijau dan merah hanya berarti naik/turun atau baik/buruk. Tidak pernah dipakai sebagai dekorasi atau brand.",
+        "section": "colors"
+      },
+      {
+        "name": "The Labeled Estimate Rule",
+        "body": "Angka estimasi UBS selalu membawa kata 'Estimasi'; data basi selalu membawa tanggal dan status merah. Tidak ada angka tanpa konteks sumber.",
+        "section": "colors"
+      },
+      {
+        "name": "The Column Rule",
+        "body": "Angka apa pun yang sejajar vertikal memakai tabular-nums.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-Except-One Rule",
+        "body": "Tanpa shadow = default. Shadow hanya untuk banner mengambang dan hover kartu merek.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do reserver gold untuk harga, aksi utama, wordmark, dan status live (The One Voice Rule).",
+      "Do label setiap angka non-resmi: 'Estimasi' untuk UBS, tanggal + status merah untuk data basi, sumber untuk spot/kurs.",
+      "Do pakai tabular-nums untuk semua angka dan kolom.",
+      "Do jaga tap target >= 44px dan focus-visible outline gold 2px offset 2px.",
+      "Do beri halaman secondary action yang jelas dan jujur saat data gagal (tampilkan error + cara manual)."
+    ],
+    "donts": [
+      "Don't pakai hijau/merah sebagai dekorasi atau aksen brand — mereka sinyal.",
+      "Don't tambahkan shadow di luar banner dan hover kartu merek; jangan glow/halo gold.",
+      "Don't pakai kartu sejenis bertumpuk tanpa urutan baca atau dekoratif bento grid.",
+      "Don't hardcode kurs cadangan secara diam — saat Frankfurter gagal, tampilkan kosong + instruksi isi manual.",
+      "Don't klaim harga UBS sebagai resmi; jangan tampilkan denominasi di luar data hargaemas.com tanpa label sumber."
+    ]
+  }
+}
