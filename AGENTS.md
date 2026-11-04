@@ -14,7 +14,7 @@
 - Setiap perubahan UI harus ada alasan singkat ("why")
 - Pake spacing/typography konsisten
 - Jangan clone UI populer tanpa diminta
-- Pertahankan identitas project ini (dark theme + gold accent)
+- Pertahankan identitas project ini (Premium Fintech / Editorial Finance 2026-11-04: light warm white + muted gold + Inter; dark theme tetap tersedia via toggle)
 - Cek console/build + klik elemen penting sebelum bilang "done"
 
 ## Project Notes

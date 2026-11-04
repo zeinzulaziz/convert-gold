@@ -31,7 +31,7 @@ Confirmed functionality:
 
 Constraints:
 - Static site di GitHub Pages. HTML/CSS/JS vanilla, tanpa build tool, tanpa backend, tanpa dependency npm.
-- Identitas wajib: dark theme + gold accent.
+- Identitas mengikat (2026-11-04): Premium Fintech / Editorial Finance — light warm white + muted gold; dark theme tetap tersedia via toggle.
 - Sumber data live wajib tetap: spot (mintedmetal / xaus), kurs USD/IDR (Frankfurter), harga merek Indonesia (hargaemas.com via JSON lokal/proxy CORS).
 - Tidak ada kredensial/rahasia di repo.
 
@@ -47,9 +47,9 @@ Resolved 2026-11-04 (redesign):
 ## Brand Commitments
 
 - Nama: "GOLD CALC" (header) / "Convert Gold" (repo & konteks).
-- Identitas visual yang mengikat: dark theme + gold accent (dari AGENTS.md project).
+- Identitas visual yang mengikat (diperbarui 2026-11-04, menggantikan "dark + gold" dari AGENTS.md): **Premium Fintech / Editorial Finance** — latar warm white (#F8F7F4) default dengan aksen muted gold (#B89548), teks charcoal (#202124), tipografi Inter (tabular-nums); rounded 12–16px, border tipis, restrained shadow. Dark theme tetap tersedia sebagai alternatif via toggle di header (dunia "The Ledger Terminal" sesi sebelumnya).
 - Voice: Bahasa Indonesia untuk UI, ringkas, fungsional; tanpa buzzword marketing (aturan anti-slop project).
-- Emoji dipakai sebagai ikon di UI saat ini; belum ada logo/favicon asli (favicon kosong `data:,`).
+- Ikon SVG inline (authored); logo mark ingot gold di header + favicon SVG.
 
 ## Evidence on Hand
 
@@ -62,7 +62,7 @@ Resolved 2026-11-04 (redesign):
 1. Angka dulu, dekorasi nanti — setiap angka yang tampil harus benar dan punya sumber; estimasi harus diberi label.
 2. Buka langsung, langsung dapat angka — tanpa login, tanpa onboarding, tanpa dinding marketing.
 3. Jujur soal keterbatasan data — harga basi, fallback, dan estimasi dikomunikasikan ke pengguna, bukan disembunyikan.
-4. Satu identitas: dark + gold, tenang dan presisi, seperti terminal trading — bukan landing page.
+4. Satu identitas: Quiet Ledger — light editorial fintech default (dengan dark sebagai alternatif), tenang dan presisi, bukan landing page.
 5. Static & sederhana — perubahan harus tetap bisa di-deploy dengan push ke `main`, tanpa memperkenalkan build pipeline tanpa persetujuan.
 
 ## Accessibility & Inclusion

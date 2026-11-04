@@ -2,30 +2,23 @@
 version: 1
 slug: "index-html"
 primary_target: "index.html"
-related_targets: []
+related_targets: ["chart.html"]
 ---
 
 ## Scope & visitor mode
 
-Redesign menyeluruh halaman kalkulator Convert Gold (`index.html`), Operate surface. Audiens: publik Indonesia umum — pembeli/investor emas fisik dan pemantau spot internasional. Job: buka halaman, langsung dapat harga emas terbaru dan konversi Rupiah per gram tanpa daftar; trading-analysis tersedia sebagai mode kedua. Sukses: angka benar, terbaca di 5 detik pertama, tanpa dekorasi mengganggu. chart.html mengikuti design system bersama, bukan redesign terpisah.
+REBRAND total halaman utama Convert Gold (`index.html`) dan chart.html, Operate surface. Audiens tetap: publik Indonesia umum — pembeli/investor emas fisik dan pemantau spot internasional. Semua fitur lama dipertahankan: konversi spot→Rp/gram multi-berat, kartu Antam/UBS/Pegadaian, tabel denominasi, kurs live, mode Trader lengkap (entry/target/SL/R-R/scenario chart), preset Ryker Gold Plan. Sukses = produk terasa seperti fintech profesional, angka tetap benar dan jujur.
 
 ## Direction contract
 
-THESIS: Terminal trading emas yang diperlakukan sebagai produk publik yang presisi — identitas dark + gold yang sama, tapi dirapikan jadi design system sungguhan (spacing, type scale, tabular numerals, kontras terukur), bukan template Binance yang ditempeli. Menolak: gradient/glow dekoratif, density tanpa hirarki, kartu-kartu sejenis tanpa urutan baca.
+THESIS: Fintech premium yang reda cahaya — warm white ground, satu aksen gold muted, tipografi Inter tabular, detail "buku besar" (attribution jujur, label estimasi/basi) sebagai kemewahan. Menolak: dashboard gelap/glow, kartu bento generatif, gradient tematik, dan dark-mode-sebagai-brand.
 
-OWN-WORLD: Ground #0f1117; panel #1a1d29; well #252836; garis #2a2d3a (sedikit dinaikkan untuk batas terbaca); aksen emas #f0b90b dipakai untuk harga & aksi utama saja; hijau #2ecc71 / merah #e74c3c khusus untuk naik-turun; teks utama hampir putih hangat, label redup dinaikkan kontrasnya ke ≥4.5:1. Type: system-ui stack + tabular-nums untuk semua angka; skala 11/12/13/15/20/28/36; uppercase tracked label cuma untuk label, bukan dekorasi. Signature move: "Au" medallion emas pada banner harga live — satu-satunya ornamen, dan itu logo produk.
+OWN-WORLD: Ground #F8F7F4; card #FFFFFF; well #EFEDE8 (warm tint); border #E5E2DA / strong #D5D1C6; teks #202124; secondary #66645E; accent #B89548 (deep #A8843C); sinyal naik #177A46 / turun #B9382A; karat label #B89548. Radius 12–16px; border 1px; shadow sangat halus hanya untuk mengangkat kartu/hover; tidak ada glow/gradient dekoratif. Dark theme = dunia Ledger Terminal (internal #0f1117/#f0b90b) di-swap via `data-theme="dark"` pada <html>. Type: Inter (Google Fonts, display=swap) + tabular-nums wajib. Signature move: gold ingot logo mark + angka Rp/gram besar dengan attribution kecil di bawah (tanggal & sumber) — editorial, bukan badge.
 
-STORY: Pengunjung datang untuk satu angka (harga emas sekarang), tetap untuk konversi per berat, dan di mode Trader menjalankan skenario beli-target-SL dengan R/R yang jujur. Halaman ini bukan sales page; satu-satunya ajakan adalah pakai angkanya.
+STORY: Pengunjung datang untuk satu angka emas; ia melihatnya langsung sebagai hierarchi finansial (spot → Rp/gram → per berat), mengambil keputusannya (beli? berapa gram? target/SL?), menyalin hasilnya, dan tahu dari mana angkanya datang. Chart historis ringkas meyakinkan tanpa buka halaman lain.
 
-FIRST VIEWPORT: Header sticky tipis (wordmark "GOLD CALC" + medallion, link Chart, status kurs, toggle Sederhana/Trader) → banner spot harga terbesar di layar (USD/oz + perubahan, Rp/gram besar di kanan, "diperbarui hh:mm" jujur) → baris kartu Antam/UBS(Estimasi)/Pegadaian 1 gram + tabel denominasi → panel kalkulator (input kiri, hasil kanan). Primary action: "Harga Live" / input terisi otomatis; angka per berat langsung terbaca penuh di layar pertama desktop.
+FIRST VIEWPORT: Header (mark + GOLD CALC, link Grafik, dot kurs live, toggle theme) dengan segmented control Sederhana/Trader di atas grid → overview dua kolom: kiri harga spot besar + perubahan + "Setara Rp X/gram · [purity]" + attribution "per [tgl], sumber: mintedmetal"; kanan strip: kurs USD/IDR + emas/gram + tombol "Salin hasil". Di bawah: section merek (3 kartu + denominasi). Primary action: auto-isi spot, "Harga Live" tersedia; salin hasil satu klik.
 
-FORM: user-pinned world (identitas trader dark + gold, dari jawaban user & AGENTS.md project). seed: none (user-pinned direction; no roll). Form: incumbent shell — top bar + banner + dua kolom — ditata ulang; layout tetap web-standard, bukan kostum terminal.
+FORM: user-pinned world (Premium Fintech / Editorial Finance; light default, dark toggle). seed: none (user-pinned direction; no roll). Form: Operate shell — top bar header, overview, kartu merek, strip konversi, grid kalkulator dua kolom; layout web-standard.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance.
-
-## Unresolved / open
-
-- Nasib preset "Ryker Gold Plan" (plan pribadi di produk publik) — dipertahankan sampai user memutuskan; dicatat di PRODUCT.md.
-- Harga UBS = Antam × 1,018 — hanya ditampilkan sebagai "Estimasi" berlabel; tidak diklaim harga resmi.
-- Data gold-indonesia.json basi >3 hari → halaman wajib pakai proxy fallback dengan label jujur "harga 15 Okt 2026" atau sejenisnya; tidak menutupi keterlambatan.
-- Finish reviewer: harness tidak punya agen `impeccable-finish-reviewer`; pengganti yang diungkapkan dipakai (subagent general fresh-context) atau pass in-thread segar.

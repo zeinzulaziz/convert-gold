@@ -1,57 +1,146 @@
 ---
 name: GOLD CALC
-description: Terminal trading emas untuk publik Indonesia — konversi spot ke Rupiah per gram, harga merek Antam/UBS/Pegadaian, analisa entry–target–stop loss.
+description: Premium fintech untuk konversi emas Indonesia — kalkulator spot→Rp/gram, harga merek, analisa trading, historis harga.
 colors:
-  gold-signal: "#f0b90b"
-  gold-deep: "#d4a00a"
-  ground: "#0f1117"
-  panel: "#1a1d29"
-  panel-raised: "#1e2130"
-  well: "#252836"
-  border: "#2e3140"
-  border-strong: "#3a3e4f"
-  antam-red: "#ff6f5e"
-  harga-hijau: "#2ecc71"
-  loss-red: "#ff7a6b"
-  ubs-blue: "#5aa9ff"
-  text: "#f2f3f7"
-  dim: "#9ba0ae"
+  stamp-gold: "#B89548"
+  deep-gold: "#7d5f28"
+  button-ink: "#3A2F12"
+  accent-soft: "rgba(184, 149, 72, 0.16)"
+  gold-tint: "rgba(184, 149, 72, 0.05)"
+  ground: "#F8F7F4"
+  surface: "#FFFFFF"
+  surface-2: "#F3F1EC"
+  well: "#EFEDE8"
+  border: "#E4E1D9"
+  border-strong: "#D3CFC3"
+  text: "#202124"
+  dim: "#66645E"
+  harga-naik: "#177A46"
+  harga-turun: "#B9382A"
+  green-soft: "rgba(23, 122, 70, 0.12)"
+  red-soft: "rgba(185, 56, 42, 0.1)"
+  antam: "#B4472F"
+  pegadaian: "#177A46"
+  ubs: "#2F6FB4"
 typography:
   display:
-    fontFamily: "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
-    fontSize: "34px"
+    fontFamily: "'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+    fontSize: "52px"
+    fontWeight: 800
+    lineHeight: 1
+    letterSpacing: "-0.03em"
+    fontFeature: "tnum"
+  display-sm:
+    fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif"
+    fontSize: "38px"
+    fontWeight: 800
+    lineHeight: 1
+    letterSpacing: "-0.03em"
+    fontFeature: "tnum"
+  chart-title:
+    fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif"
+    fontSize: "42px"
+    fontWeight: 800
+    lineHeight: 1
+    letterSpacing: "-0.03em"
+    fontFeature: "tnum"
+  headline-lg:
+    fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif"
+    fontSize: "30px"
     fontWeight: 800
     lineHeight: 1.1
-    letterSpacing: "-0.01em"
+    fontFeature: "tnum"
+  headline-xl:
+    fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif"
+    fontSize: "36px"
+    fontWeight: 800
+    lineHeight: 1.05
+    letterSpacing: "-0.02em"
+    fontFeature: "tnum"
+  headline-md:
+    fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif"
+    fontSize: "26px"
+    fontWeight: 800
+    lineHeight: 1.1
     fontFeature: "tnum"
   headline:
-    fontFamily: "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+    fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif"
     fontSize: "22px"
+    fontWeight: 800
+    lineHeight: 1.1
+    fontFeature: "tnum"
+  headline-sm:
+    fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif"
+    fontSize: "18px"
     fontWeight: 800
     lineHeight: 1.2
     fontFeature: "tnum"
+  stat-lg:
+    fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif"
+    fontSize: "24px"
+    fontWeight: 800
+    lineHeight: 1.1
+    fontFeature: "tnum"
+  stat:
+    fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif"
+    fontSize: "21px"
+    fontWeight: 800
+    lineHeight: 1.15
+    fontFeature: "tnum"
+  stat-sm:
+    fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif"
+    fontSize: "19px"
+    fontWeight: 800
+    lineHeight: 1.2
+    fontFeature: "tnum"
+  stat-xs:
+    fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif"
+    fontSize: "17px"
+    fontWeight: 800
+    lineHeight: 1.2
+    fontFeature: "tnum"
+  title-lg:
+    fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif"
+    fontSize: "13px"
+    fontWeight: 800
+    lineHeight: 1.4
+    letterSpacing: "0.14em"
   title:
-    fontFamily: "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+    fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif"
     fontSize: "12px"
     fontWeight: 700
     lineHeight: 1.4
     letterSpacing: "0.12em"
   body:
-    fontFamily: "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+    fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif"
     fontSize: "14px"
     fontWeight: 600
     lineHeight: 1.5
     fontFeature: "tnum"
+  body-lg:
+    fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif"
+    fontSize: "15px"
+    fontWeight: 600
+    lineHeight: 1.5
+    fontFeature: "tnum"
+  body-sm:
+    fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif"
+    fontSize: "13px"
+    fontWeight: 600
+    lineHeight: 1.5
+    fontFeature: "tnum"
   label:
-    fontFamily: "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
-    fontSize: "12px"
+    fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif"
+    fontSize: "11px"
     fontWeight: 700
     lineHeight: 1.4
     letterSpacing: "0.12em"
 rounded:
-  sm: "6px"
-  md: "10px"
-  lg: "12px"
+  sharp: "0px"
+  sm: "10px"
+  md: "12px"
+  lg: "16px"
+  full: "999px"
 spacing:
   1: "4px"
   2: "8px"
@@ -62,14 +151,14 @@ spacing:
   8: "32px"
 components:
   button-primary:
-    backgroundColor: "{colors.gold-signal}"
-    textColor: "#141000"
+    backgroundColor: "{colors.stamp-gold}"
+    textColor: "{colors.button-ink}"
     rounded: "{rounded.sm}"
     padding: "12px 18px"
     height: "46px"
   button-ghost:
     backgroundColor: "{colors.well}"
-    textColor: "{colors.dim}"
+    textColor: "{colors.text}"
     rounded: "{rounded.sm}"
     padding: "10px 16px"
     height: "44px"
@@ -80,7 +169,7 @@ components:
     padding: "8px 14px"
     height: "44px"
   panel-card:
-    backgroundColor: "{colors.panel}"
+    backgroundColor: "{colors.surface}"
     textColor: "{colors.text}"
     rounded: "{rounded.lg}"
     padding: "20px"
@@ -88,143 +177,132 @@ components:
     backgroundColor: "{colors.well}"
     textColor: "{colors.text}"
     rounded: "{rounded.sm}"
-    padding: "10px 12px"
-    height: "46px"
-  mode-toggle-active:
-    backgroundColor: "{colors.gold-signal}"
-    textColor: "#141000"
+    padding: "11px 14px"
+    height: "48px"
+  segmented-active:
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.text}"
     rounded: "{rounded.sm}"
-    padding: "10px 18px"
+    padding: "8px 16px"
     height: "44px"
+  purity-active:
+    backgroundColor: "{colors.stamp-gold}"
+    textColor: "{colors.button-ink}"
+    rounded: "{rounded.sm}"
+    padding: "6px 12px"
+    height: "36px"
 ---
+
 
 # Design System: GOLD CALC
 
 ## Overview
 
-**Creative North Star: "The Ledger Terminal"**
+**Creative North Star: "The Quiet Ledger"**
 
-GOLD CALC adalah buku besar emas yang berjalan di dalam terminal: permukaan gelap nyaris hitam, angka tabular besar, aksen emas dipakai seperti tinta stempel — jarang dan presisi. Halaman ini bukan landing page dan tidak pernah mencoba menjadi satu: setiap elemen ada untuk membawa harga, konversi, atau keputusan trade dalam beberapa detik. Panel adalah lembaran buku besar; kartu 1 gram adalah baris cap; warna hanya menjawab "naik atau turun" dan "fokus ke mana".
+GOLD CALC adalah buku besar emas yang terbit di kertas hangat: latar warm white, tinta charcoal, satu segeli emas yang dipakai jarang. Tidak ada glow, tidak ada gradient dekoratif, tidak ada kisi-kisi kartu seragam. Hirarki finansial dibaca berurutan: harga spot sebagai angka terbesar, padanan Rupiah per gram di bawahnya, attribution kecil sebagai catatan kaki — seperti ringkasan pasar di koran finansial, bukan dashboard.
 
-Density tinggi diperbolehkan, tapi hirarki wajib terbaca: harga live adalah angka terbesar di layar, merek logam adalah kartu-kartu, analisa trader adalah tabel dan rasio. Dekorasi yang tidak membawa data dihapus. Status live, estimasi UBS, dan data basi selalu diberi label — kejujuran data adalah bagian dari estetika, bukan lampiran.
-
-Rejections yang dikonfirmasi: gradient/glow sebagai dekorasi tanpa fungsi; kartu sejenis bertumpuk tanpa urutan baca; em-dash sebagai dekorasi; density tanpa hirarki; klaim atau angka tanpa sumber.
+Kejujuran adalah bagian dari desain: UBS selalu berlabel estimasi, data merek basi selalu membawa tanggal dan status merah, spot/kurs selalu menunjuk sumber. Halaman ini melayani pembeli emas Indonesia yang mengambil keputusan dalam hitungan detik — angka harus benar, terbaca, dan terinformasi, dalam bahasa yang tidak menjual apa pun.
 
 **Key Characteristics:**
-- Dark ground (#0f1117) dengan tiga tingkat permukaan: ground, panel, well
-- Gold (#f0b90b) = satu-satunya aksen; appear hanya untuk harga, aksi utama, wordmark, dan status live
-- tabular-nums di semua angka; system-ui sebagai satu-satunya keluarga
-- Label uppercase 12px letterspaced untuk section, bukan hiasan
-- Tidak ada shadow kecuali satu shadow halus pada banner mengambang dan hover kartu merek
-- Status selalu berlabel: live (hijau), basi/gagal (merah), estimasi (biru)
+- Warm white ground (#F8F7F4), satu aksen gold muted (#B89548); tidak ada gold kedua di permukaan
+- Inter sebagai satu-satunya keluarga; tabular-nums untuk semua angka
+- Radius 10/12/16px; border 1px #E4E1D9; shadow sangat halus hanya mengangkat, tidak bersinar
+- Label uppercase 11–12px untuk section, letterspacing 0.12em
+- Dark theme ("The Ledger Terminal") tersedia via toggle header; light tetap default
 
 ## Colors
 
-Terminal ledger: netral dingin kebiruan dengan satu lampu emas di atasnya.
+Satin paper: ground hangat, surfaces putih, tinta charcoal; emas tampil sebagai segeli.
 
 ### Primary
-- **Stamp Gold** (#f0b90b): aksen tunggal. Harga Rp/gram live, tombol aksi utama, angka per-gram kunci, toggle mode aktif, wordmark, fokus keyboard. Jangan dipakai untuk seluruh permukaan atau teks isi.
-- **Deep Gold** (#d4a00a): tepi medallion Au dan varian gelap aksen.
+- **Stamp Gold** (#B89548): aksen tunggal. Isi tombol primer (toggle karat, tombol utama), isian aktif toggle pada dark theme, fokus dan hover border, gram-col values. Jangan dipakai untuk teks body atau area luas.
+- **Deep Gold** (#7d5f28): gold untuk TEKS di light theme (panel-title, link hover, gram-col) — lolos kontras ≥4.5:1 di semua permukaan light.
 
 ### Secondary
-- **Naik Hijau** (#2ecc71): perubahan harga naik, profit, kurs live Frankfurter, status dot live. Bukan warna brand — warna sinyal.
-- **Turun Merah** (#ff7a6b): perubahan harga turun, loss, error, data basi.
+- **Naik Hijau** (#177A46): perubahan naik, profit, dot live, kurs. **Turun Merah** (#B9382A): turun, loss, error, data basi. Sinyal, bukan brand.
 
 ### Tertiary
-- **Antam Red** (#ff6f5e): penanda merek Antam (angka harga 1g dan tag). Identitas merek, bukan peringatan.
-- **Pegadaian Green** (#2ecc71 reuse): penanda merek Pegadaian.
-- **UBS Blue** (#5aa9ff): penanda merek UBS; juga dipakai untuk label "Estimasi" karena itu peran jujurnya.
+- **Antam Red** (#B4472F), **Pegadaian Green** (#177A46 reuse), **UBS Blue** (#2F6FB4): penanda merek; soft tints untuk tag pills. UBS Blue juga label estimasi.
 
 ### Neutral
-- **Ledger Ground** (#0f1117): latar halaman.
-- **Ledger Panel** (#1a1d29): permukaan kartu, panel, header.
-- **Raised Panel** (#1e2130): latar banner mengambang (dikeduanya).
-- **Well** (#252836): input, chip, sel saat "di dalam" panel.
-- **Ledger Border** (#2e3140): garis sistem; **#3a3e4f** untuk border kuat (fokus/hover).
-- **Ash Text** (#f2f3f7): teks utama (mendekati putih hangat).
-- **Dim Ash** (#9ba0ae): label, sub, meta. Ratio ≥ 5.6:1 di atas ground/panel — aman.
+- **Ground** (#F8F7F4): latar halaman. **Surface** (#FFFFFF): kartu/panel/header translucent. **Surface-2** (#F3F1EC): lapisan alternatif (banner gradient halus). **Well** (#EFEDE8): input, chip, sel saat "di dalam" panel. **Border** (#E4E1D9) / **Border-strong** (#D3CFC3): garis sistem. **Ash Text** (#202124): teks utama. **Dim Ash** (#66645E): label/sub/meta (≥5:1 di atas surface).
 
 ### Named Rules
-**The One Voice Rule.** Gold muncul di ≤10% area render mana pun: harga live, Rp/gram, tombol primer, toggle aktif, wordmark. Sisanya adalah buku besar netral. Kalau layar mulai "berkilau", sesuatu sedang salah.
-**The Signal Rule.** Hijau dan merah hanya berarti naik/turun atau baik/buruk. Tidak pernah dipakai sebagai dekorasi atau brand.
-**The Labeled Estimate Rule.** Angka estimasi UBS selalu membawa kata "Estimasi" di kartu yang sama; data basi selalu membawa tanggal dan status merah. Tidak ada angka tanpa konteks sumber.
+**The One Seal Rule.** Emas muncul sebagai segeli: tombol primer, karat aktif, fokus — tidak pernah sebagai blok dekoratif atau latar section.
+**The Long-on-Short Rule.** Warna sinyal (hijau/merah) hanya bicara arah dan kualitas; kalau layar terasa "berwarna", tuduhnya pada kita, bukan pada pasar.
 
 ## Typography
 
-**Display Font:** system-ui stack (ui-sans-serif, -apple-system, 'Segoe UI', Roboto) dengan `font-variant-numeric: tabular-nums`
-**Body Font:** sama dengan Display — satu keluarga, banyak berat
-**Label Font:** sama, uppercase 12px, weight 700, tracking 0.12em
+**Display/Body Font:** Inter (400–800), `font-variant-numeric: tabular-nums` wajib
+**Label:** Inter 700 uppercase, tracking 0.12em
 
-**Character:** Satu keluarga, satu trik: angka tabular. Semua harga sejajar kolom secara vertikal — seperti kolom buku besar. Tidak ada serif, tidak ada display face; karakter datang dari weight dan tracking, bukan dari perubahan keluarga.
+**Character:** Satu keluarga, satu trik — angka tabular. Di layar ini angka adalah gambar utama; Inter dipakai sampai habis kemampuannya: weight 400→800, tracking -0.03em untuk harga besar, +0.12em untuk label.
 
 ### Hierarchy
-- **Display** (800, 34px, lh 1.1, -1% tracking): harga spot USD di banner; harga Rp/gram saat memakai skala besar.
-- **Headline** (800, 22px, tabular): harga merek 1 gram; stat-strip value 22px.
-- **Title** (700, 12px, uppercase 0.12em): judul section (`HARGA EMAS INDONESIA`, panel title). Selalu uppercase, letterspaced, berwarna dim atau gold.
-- **Body** (600, 14px, tabular): isi tabel, input value, label tombol.
-- **Label** (700, 12px, uppercase 0.12em): field label, stat label, kolom tabel.
-
-### Named Rules
-**The Column Rule.** Angka apa pun yang sejajar vertikal memakai tabular-nums. Tidak terkecuali di tabel harga, modal, atau R/R.
-**The Tracking Rule.** Tracking besar (≥ 0.1em) hanya untuk label uppercase, tidak pernah untuk kalimat atau angka.
+- **Display** (800, clamp 38–52px, lh 1, -0.03em): harga spot USD — satu-satunya peran.
+- **Headline** (800, 22px): Rp per gram di overview; harga merek 1 gram.
+- **Title** (700, 12px, uppercase .12em, dim): judul section ("HARGA EMAS INDONESIA", panel titles).
+- **Body** (600, 14px, tabular): isi tabel, input value, tombol.
+- **Label** (700, 11px, uppercase .12em, dim): field label, kolom tabel, stat label.
 
 ## Layout
 
-Kontainer maks 1080px (chart 1000px), padding 20px desktop / 12px mobile. Struktur: header sticky 60px+ (auto height, wrap) → banner harga → section merek → stat-strip 3 sel → grid utama 340px 1fr. Breakpoint: 880px (grid kolaps jadi 1 kolom, header padding mengecil), 600px (kartu merek menumpuk, stat-strip jadi 2 kolom, tab targets 44px). Konten tabel lebar (denominasi, tabel hasil) boleh scroll horizontal di dalam container-nya — halaman tidak pernah scroll horizontal. Spacing rhythm: spasi section 20px (gap grid), spasi dalam komponen 16–20px, grup rapat 8px. Elemen penting selalu punya `min-width: 0`/`min-height: 44px`.
+Container 1120px (grafik 1040px), padding 24px/12px mobile. Urutan: header sticky 64px → overview 2-kolom (1.35fr:1fr; border kanan di desktop, stack di ≤880px) → section merek (head + 3 kartu + details denominasi) → grid kalkulator 340px/1fr → historis → footer. Section gap 20px; padding dalam kartu 20–28px. Breakpoints: 880px (kolom tunggal, overview stack), 600px (kartu 1 kolom, stat-strip 2 kolom, target ≥44px). Tabel lebar scroll di dalam container-nya; halaman tidak pernah scroll horizontal.
 
 ## Elevation & Depth
 
-Sistem ini flat. Kedalaman dibangun dari tiga tingkat permukaan (ground 0f1117 → panel 1a1d29 → raised 1e2130/well 252836) dan garis border 1px — bukan shadow. Pengecualian yang disahkan user: **satu shadow halus untuk elemen mengambang** (banner harga, `0 12px 36px rgba(0,0,0,.4)`) dan **hover kartu merek** (`translateY(-2px)` + `0 10px 28px rgba(0,0,0,.35)`). Shadow lain tidak diperbolehkan; hover transform dibatasi 2px.
-
-### Named Rules
-**The Flat-Except-One Rule.** Tanpa shadow = default. Shadow hanya untuk banner mengambang dan feedback hover kartu merek. Tidak ada shadow untuk kartu statis, teks, atau border dekoratif.
+Flat dengan satu tingkat angkat. Kedalaman dari permukaan (ground → surface → well) + border 1px. Shadow hanya: kartu/panel (`0 1px 2px rgba(32,33,36,.05), 0 4px 14px rgba(32,33,36,.04)` — hampir tak terlihat), hover kartu merek dan toast (`shadow-2`). Tidak ada shadow dekoratif, glow, atau border gradien.
 
 ## Shapes
 
-Radius kecil dan konsisten: 6px (input, tombol, chip, toggle), 10px (kartu merek, well), 12px (panel, banner). Medallion "Au" adalah satu-satunya bentuk bundar di sistem. Border selalu 1px solid #2e3140 (atau #3a3e4f saat kuat) — tidak pernah tebal, tidak pernah berwarna dekoratif; border berwarna hanya untuk sinyal (Antam/UBS/Pegadaian tag) atau aksen layar banner (1px gold 38%). Accent border-top di card rounded dilarang (pakai border penuh tinted).
+Radius: 10px (input, tombol, chip, segmented), 12px (kartu merek, well), 16px (panel, banner, overview), 999px (change pill, toast, scrollbar), 0 (focus outline). Logo mark: rounded square 14px dengan tiga trapesium ingot charcoal — satu-satunya bentuk ornamen.
 
 ## Components
 
 ### Buttons
-- **Shape:** radius 6px, tinggi minimum 44–46px, label 700.
-- **Primary:** Stamp Gold solid, teks #141000, padding 12px 18px. Untuk satu aksi utama per layar (Ryker Gold Plan, + Add saat relevan).
-- **Ghost:** well background, teks dim, border 1px; hover teks text-color.
-- **Green CTA (+ Add target):** Naik Hijau solid, teks #04180c.
-- **Focus:** `outline: 2px solid #f0b90b; offset: 2px` — tidak diganti oleh style apa pun.
+- **Shape:** radius 10px, min-height 44–46px, label 700.
+- **Primary:** Stamp Gold isi, teks #3A2F12. Satu aksi utama per layar.
+- **Ghost:** well + border; hover: border gold + teks deep gold.
+- **Focus:** outline 2px deep-gold, offset 2px.
 
-### Chips (quick price, range)
-Well background, teks dim, radius 6px, 44px tap target; hover/focus: border + teks gold. Chip "Harga Live" memakai aksen tinted (border gold 40%).
+### Chips (quick price)
+Well + border, teks dim, 44px; hover border+teks gold-deep; chip "Harga Live" tinted accent.
 
-### Cards / Containers (panel, kartu merek)
-Radius 12px/10px, background panel/well, border 1px, padding 16–20px. Panel title = label uppercase dengan garis bawah 1px. Kartu merek: tag merek kecil (Antam/UBS/Pegadaian tinted border), harga 22px tabular 800 dalam warna merek, diff "vs spot" 12px dim, UBS selalu dengan baris estimasi. Hover kartu merek: angkat 2px + shadow halus.
+### Cards (panel, merek, overview)
+Surface putih, border 1px, radius 16/12px, padding 20–28px; hover kartu merek: lift 2px + shadow-2.
 
-### Inputs / Fields
-Well background, border 1px #2e3140, radius 6px, tinggi 46px, teks 15px 600 tabular, placeholder dim. Focus: border gold. Prefix kiri 2px berwarna untuk grup konteks (entry=gold, target=hijau, SL=merah) dengan padding kiri dalam. Label field uppercase 12px dim di atas input; hint 12px dim di bawah, reserve space saat kosong.
+### Inputs
+Well background, border 1px, radius 10px, tinggi 48px, teks 15px 600 tabular, placeholder dim; focus border gold. Grup konteks (entry=gold / target=hijau / SL=merah) via border-left 2px.
 
 ### Navigation
-Header sticky; wordmark medallion Au + "GOLD CALC" gold 800 dengan micro-tag "TRADER EDITION" dim; kanan: link "Chart" (ikon line-chart 16px + teks, min-height 44px), status kurs (dot hijau/merah + teks), toggle Sederhana/Trader (dua tombol radius 6px di well; aktif = gold solid). Di ≤880px status kurs disembunyikan; di ≤600px wordmark mengecil dan header wrap.
+Header sticky translucent (surface 88% + blur). Wordmark: mark ingot + "GOLD CALC" 800 + tagline "EMAS INDONESIA, LIVE" 10px dim. Kanan: link Grafik (ikon + teks 44px), dot kurs live + teks, tombol theme toggle 44px (ikon moon/sun).
+
+### Signature: The Quiet Banner
+Overview dua sisi: kiri — label "HARGA EMAS SPOT · XAU/USD", harga USD besar, chip perubahan (hijau/merah tinted), Rp/gram gold-deep 24px, pemilih karat (segmented 24/22/18/14K), attribution kecil dengan sumber+tanggal; kanan — "RINGKASAN": kurs + emas/gram + tombol "Salin hasil" (outline ghost 100%).
 
 ### R/R Box
-Pusat analisis trader: well background, radius 12px, border 1px yang berubah warna oleh grade (hijau ≥2, gold ≥1, merah < 1); angka "1 : x.xx" 38px 800 tabular. Ini satu-satunya elemen yang menyesuaikan warna tepi berdasarkan data.
+Well, radius 16px, border berubah oleh grade (hijau ≥2, gold ≥1, merah < 1); angka 36px 800 tabular. Sama di kedua theme.
 
-### Signature: Ledger Banner
-Banner harga live: raised panel, border 1px gold 38%, shadow halus, padding 20–24px. Kiri: medallion Au/tumpukan emas SVG + "HARGA EMAS SPOT" label + harga USD 34px 800 + chip perubahan (+hijau/-merah, tinted bg); kanan: "SETARA (IDR)" + Rp/gram gold 24px + caption sumber & timestamp jujur.
+## Themes
+
+**Light (default):** seperti token di atas — "The Quiet Ledger".
+**Dark ("The Ledger Terminal")** (`<html data-theme="dark">`, persisted di localStorage `cg-theme`): ground #0f1117, surface #1a1d29, surface-2 #1e2130, well #252836, border #2e3140/strong #3a3e4f, text #f2f3f7, dim #9ba0ae, stamp-gold #f0b90b (deep-gold #d4a00a), naik #2ecc71, turun #ff7a6b; shadow hanya untuk banner. Fungsi `syncThemeIcon()` dan chart merahraw menggambar ulang warna pada toggle.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** reserver gold untuk harga, aksi utama, wordmark, dan status live (The One Voice Rule).
-- **Do** label setiap angka non-resmi: "Estimasi" untuk UBS, tanggal + status merah untuk data basi, sumber untuk spot/kurs.
-- **Do** pakai tabular-nums untuk semua angka dan kolom.
-- **Do** jaga tap target ≥ 44px dan `:focus-visible` outline gold 2px offset 2px.
-- **Do** pakai tiga tingkat permukaan (ground/panel/well) + border 1px untuk kedalaman.
-- **Do** beri halaman secondary action yang jelas ("Harga Live") dan jujur saat data gagal (tampilkan error + cara manual).
+- **Do** pakai Stamp Gold hanya untuk segeli (CTA, karat aktif, fokus) dan Deep Gold untuk teks aksen (The One Seal Rule).
+- **Do** label setiap angka: "Estimasi" (UBS), tanggal + status merah (data basi), sumber spot/kurs/historis.
+- **Do** tabular-nums untuk semua angka; body measure 65–75ch.
+- **Do** jaga tap target ≥44px dan :focus-visible gold.
+- **Do** gunakan skeleton shimmer saat memuat; bukan spinner telanjang.
+- **Do** jujur saat gagal: tampilkan error + cara manual (isi kurs manual), bukan angka karangan.
 
 ### Don't:
-- **Don't** pakai hijau/merah sebagai dekorasi atau aksen brand — mereka sinyal.
-- **Don't** tambahkan shadow di luar banner dan hover kartu merek; jangan glow/halo gold seolah "premium".
-- **Don't** pakai kartu sejenis bertumpuk tanpa urutan baca atau dekoratif "bento grid".
-- **Don't** pakai gradient dekoratif tanpa data; gradient hanya untuk latar banner sangat halus dan medallion.
-- **Don't** hardcode kurs cadangan secara diam — saat Frankfurter gagal, tampilkan kosong + instruksi isi manual.
-- **Don't** klaim harga UBS sebagai resmi; tidak menampilkan denominasi di luar data hargaemas.com tanpa label sumber.
-- **Don't** pakai em-dash sebagai gaya penulisan UI; gunakan "•", koma, atau titik dua.
+- **Don't** glow/halo gold, gradient tematik, atau glassmorphism dekoratif.
+- **Don't** teks gold muted di bawah 4.5:1 (pakai Deep Gold #7d5f28).
+- **Don't** kartu bento seragam tanpa urutan baca; jangan tambah shadow di luar yang terdefinisi.
+- **Don't** hardcode kurs cadangan; jangan tampilkan UBS sebagai harga resmi.
+- **Don't** pakai Inter untuk headline display gaya editorial serif — hierarki datang dari weight & tracking.
+- **Don't** lupa attribution sumber + tanggal di viewport pertama.
